@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: equilibrar-produccion
+    restart: unless-stopped
+    ports:
+      - "80:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      # Si usas variables de API, descomenta y ajústalos:
+      # - GEMINI_API_KEY=tu_clave_aqui
