@@ -154,7 +154,7 @@ const Navbar: React.FC = () => {
             <Link
               to="/"
               onClick={() => setIsOpen(false)}
-              className="w-full py-4 text-xl font-serif text-brand-heading border-b border-gray-50 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4"
+              className="w-full py-4 text-xl font-serif text-slate-900 border-b border-gray-50 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4"
             >
               Inicio
             </Link>
@@ -162,7 +162,7 @@ const Navbar: React.FC = () => {
             <Link
               to="/"
               onClick={(e) => handleLinkClick(e, '/', '#about')}
-              className="w-full py-4 text-xl font-serif text-brand-heading border-b border-gray-50 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4"
+              className="w-full py-4 text-xl font-serif text-slate-900 border-b border-gray-50 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4"
             >
               Nosotros
             </Link>
@@ -177,7 +177,7 @@ const Navbar: React.FC = () => {
                 key={link.name}
                 to={link.path}
                 onClick={(e) => handleLinkClick(e, link.path, link.hash)}
-                className="w-full py-3 text-lg font-medium text-brand-text/80 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4 pl-6 border-l-2 border-transparent hover:border-brand-primary"
+                className="w-full py-3 text-lg font-medium text-slate-700 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4 pl-6 border-l-2 border-transparent hover:border-brand-primary"
               >
                 {link.name}
               </Link>
@@ -193,7 +193,7 @@ const Navbar: React.FC = () => {
                 key={link.name}
                 to={link.path}
                 onClick={(e) => handleLinkClick(e, link.path, link.hash)}
-                className="w-full py-3 text-lg font-medium text-brand-text/80 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4 pl-6 border-l-2 border-transparent hover:border-brand-primary"
+                className="w-full py-3 text-lg font-medium text-slate-700 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4 pl-6 border-l-2 border-transparent hover:border-brand-primary"
               >
                 {link.name}
               </Link>
