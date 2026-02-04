@@ -151,22 +151,49 @@ const Navbar: React.FC = () => {
 
             <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-4">Menú Principal</p>
 
-            {/* Explicit Home Link for Mobile */}
             <Link
               to="/"
               onClick={() => setIsOpen(false)}
-              className="w-full py-4 text-2xl font-serif text-brand-heading border-b border-gray-50 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300"
+              className="w-full py-4 text-xl font-serif text-brand-heading border-b border-gray-50 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4"
             >
               Inicio
             </Link>
 
-            {navLinks.map((link, idx) => (
+            <Link
+              to="/"
+              onClick={(e) => handleLinkClick(e, '/', '#about')}
+              className="w-full py-4 text-xl font-serif text-brand-heading border-b border-gray-50 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4"
+            >
+              Nosotros
+            </Link>
+
+            {/* SEPARATOR & SERVICES */}
+            <div className="w-full pt-4 pb-2">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4 text-left">Servicios Clínicos</p>
+            </div>
+
+            {navLinks.slice(1, 3).map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
                 onClick={(e) => handleLinkClick(e, link.path, link.hash)}
-                style={{ transitionDelay: `${50 + idx * 30}ms` }}
-                className={`w-full py-4 text-2xl font-serif text-brand-heading border-b border-gray-50 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 transform ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
+                className="w-full py-3 text-lg font-medium text-brand-text/80 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4 pl-6 border-l-2 border-transparent hover:border-brand-primary"
+              >
+                {link.name}
+              </Link>
+            ))}
+
+            {/* SEPARATOR & PROGRAMS */}
+            <div className="w-full pt-4 pb-2">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4 text-left">Programas</p>
+            </div>
+
+            {navLinks.slice(3, 6).map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                onClick={(e) => handleLinkClick(e, link.path, link.hash)}
+                className="w-full py-3 text-lg font-medium text-brand-text/80 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4 pl-6 border-l-2 border-transparent hover:border-brand-primary"
               >
                 {link.name}
               </Link>
