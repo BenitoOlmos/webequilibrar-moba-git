@@ -4,6 +4,9 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import ServiceDetail from './pages/ServiceDetail';
 import ProgramDetail from './pages/ProgramDetail';
+import Hypnosis from './pages/Hypnosis';
+import HypnosisCulpa from './pages/HypnosisCulpa';
+import ReprogramacionMental from './pages/ReprogramacionMental';
 
 // ScrollToTop component to handle scroll reset on route change
 const ScrollToTop = () => {
@@ -66,6 +69,33 @@ const App: React.FC = () => {
           element={
             <Layout showFooter={false}>
               <ProgramDetail slug="programa-irritabilidad" />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/autoestima-y-amor-propio"
+          element={
+            <Layout>
+              <Hypnosis />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/hipnosis-culpa"
+          element={
+            <Layout>
+              <HypnosisCulpa />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/reprogramacion-mental"
+          element={
+            <Layout>
+              <ReprogramacionMental />
             </Layout>
           }
         />

@@ -11,6 +11,12 @@ import aboutClinicMain from '../src/assets/images/about-clinic-main.jpg';
 import aboutClinicDetail from '../src/assets/images/about-clinic-detail.jpg';
 import servicePsychiatry from '../src/assets/images/service-psychiatry.jpg';
 import servicePsychology from '../src/assets/images/service-psychology.png';
+
+// New images
+import heroImage1 from '../src/assets/images/1.png';
+import heroImage5 from '../src/assets/images/5.png';
+import heroImage7 from '../src/assets/images/7.png';
+
 import programAngustia from '../src/assets/images/program-angustia.png';
 import programCulpa from '../src/assets/images/program-culpa.png';
 import programIrritabilidad from '../src/assets/images/program-irritabilidad.jpg';
@@ -195,8 +201,8 @@ const Home: React.FC = () => {
                      <div className="relative">
                         <div className="aspect-[4/5] rounded-sm overflow-hidden shadow-luxury">
                            <img
-                              src={aboutClinicMain}
-                              alt="Consulta Clínica Equilibrar"
+                              src={heroImage7}
+                              alt="Consulta Clínica Equilibrar - Arquitectura"
                               className="w-full h-full object-cover"
                            />
                         </div>
@@ -227,7 +233,7 @@ const Home: React.FC = () => {
                   <Link to="/psiquiatria" className="group block animate-fade-in-down" style={{ animationDelay: '0.2s' }}>
                      <div className="relative aspect-[4/3] md:h-[400px] bg-brand-sand mb-6 md:mb-8 overflow-hidden rounded-sm shadow-luxury">
                         <img
-                           src={servicePsychiatry}
+                           src={heroImage1}
                            alt="Psiquiatría"
                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 grayscale group-hover:grayscale-0 opacity-90"
                            loading="lazy"
@@ -249,7 +255,7 @@ const Home: React.FC = () => {
                   <Link to="/psicologia" className="group block md:mt-24 animate-fade-in-down" style={{ animationDelay: '0.4s' }}>
                      <div className="relative aspect-[4/3] md:h-[400px] bg-brand-sand mb-6 md:mb-8 overflow-hidden rounded-sm shadow-luxury">
                         <img
-                           src={servicePsychology}
+                           src={heroImage5}
                            alt="Psicología"
                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 grayscale group-hover:grayscale-0 opacity-90"
                            loading="lazy"
@@ -428,6 +434,64 @@ const Home: React.FC = () => {
                </div>
             </div>
          </section>
+
+         <div className="py-24 bg-white border-t border-brand-sand/30">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+               <div className="text-center mb-12">
+                  <span className="text-brand-gold text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase block mb-3">Material Exclusivo</span>
+                  <h2 className="text-2xl md:text-3xl font-serif text-brand-heading">Recursos Clínicos de Apoyo</h2>
+               </div>
+
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+
+                  {/* Card 1: Autoestima */}
+                  <Link
+                     to="/autoestima-y-amor-propio"
+                     className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-sand/50 to-white border border-brand-primary/10 p-8 hover:shadow-luxury transition-all duration-300 hover:-translate-y-1"
+                  >
+                     <div className="flex flex-col items-center text-center">
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 text-brand-primary group-hover:scale-110 transition-transform duration-300">
+                           <Sparkles size={20} />
+                        </div>
+                        <h3 className="font-serif text-lg text-brand-heading mb-2 group-hover:text-brand-primary transition-colors">Autoestima y Amor Propio</h3>
+                        <p className="text-xs text-slate-500 font-light mb-6 leading-relaxed">Reprogramación subliminal para fortalecer tu valía.</p>
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-brand-gold border-b border-brand-gold/30 pb-1 group-hover:border-brand-gold transition-all">Acceder al Audio</span>
+                     </div>
+                  </Link>
+
+                  {/* Card 2: Culpa */}
+                  <Link
+                     to="/hipnosis-culpa"
+                     className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-sand/50 to-white border border-brand-primary/10 p-8 hover:shadow-luxury transition-all duration-300 hover:-translate-y-1"
+                  >
+                     <div className="flex flex-col items-center text-center">
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 text-brand-primary group-hover:scale-110 transition-transform duration-300">
+                           <ShieldCheck size={20} />
+                        </div>
+                        <h3 className="font-serif text-lg text-brand-heading mb-2 group-hover:text-brand-primary transition-colors">Gestión de la Culpa</h3>
+                        <p className="text-xs text-slate-500 font-light mb-6 leading-relaxed">Hipnosis clínica para transformar la culpa en responsabilidad.</p>
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-brand-gold border-b border-brand-gold/30 pb-1 group-hover:border-brand-gold transition-all">Acceder al Audio</span>
+                     </div>
+                  </Link>
+
+                  {/* Card 3: Reprogramación */}
+                  <Link
+                     to="/reprogramacion-mental"
+                     className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-sand/50 to-white border border-brand-primary/10 p-8 hover:shadow-luxury transition-all duration-300 hover:-translate-y-1"
+                  >
+                     <div className="flex flex-col items-center text-center">
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 text-brand-primary group-hover:scale-110 transition-transform duration-300">
+                           <Brain size={20} />
+                        </div>
+                        <h3 className="font-serif text-lg text-brand-heading mb-2 group-hover:text-brand-primary transition-colors">Reprogramación Mental</h3>
+                        <p className="text-xs text-slate-500 font-light mb-6 leading-relaxed">Actualización cognitiva mediante neuroplasticidad y PNL.</p>
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-brand-gold border-b border-brand-gold/30 pb-1 group-hover:border-brand-gold transition-all">Acceder al Audio</span>
+                     </div>
+                  </Link>
+
+               </div>
+            </div>
+         </div>
 
       </div>
    );
