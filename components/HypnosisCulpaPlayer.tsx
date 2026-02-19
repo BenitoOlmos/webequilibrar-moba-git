@@ -16,8 +16,8 @@ const HypnosisCulpaPlayer: React.FC = () => {
                 <div className="reproductor-hipnosis">
                     <img src={logo} alt="Logo Clínica Equilibrar" className="reproductor-logo" />
 
-                    <h2>Hipnosis para la Culpa</h2>
-                    <p>Audio y Guía creada para Aldo</p>
+                    <h2>Hipnosis para la Reprogramación</h2>
+                    <p>Audio y Guía creada para reprogramar las emociones</p>
 
                     <audio controls controlsList="nodownload">
                         <source src={audioFile} type="audio/mpeg" />
