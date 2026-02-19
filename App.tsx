@@ -83,7 +83,7 @@ const App: React.FC = () => {
         />
 
         <Route
-          path="/hipnosis-culpa"
+          path="/reprogramacion"
           element={
             <Layout>
               <HypnosisCulpa />
