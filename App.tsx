@@ -7,6 +7,7 @@ import ProgramDetail from './pages/ProgramDetail';
 import Hypnosis from './pages/Hypnosis';
 import HypnosisCulpa from './pages/HypnosisCulpa';
 import ReprogramacionMental from './pages/ReprogramacionMental';
+import TestRFAI from './pages/TestRFAI';
 
 // ScrollToTop component to handle scroll reset on route change
 const ScrollToTop = () => {
@@ -100,6 +101,15 @@ const App: React.FC = () => {
           }
         />
 
+        <Route
+          path="/test-rfai"
+          element={
+            <Layout>
+              <TestRFAI />
+            </Layout>
+          }
+        />
+        {/* Add more public routes here */}
       </Routes>
     </Router>
   );
