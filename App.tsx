@@ -9,6 +9,7 @@ import HypnosisCulpa from './pages/HypnosisCulpa';
 import ReprogramacionMental from './pages/ReprogramacionMental';
 import TestRFAI from './pages/TestRFAI';
 import AudioReprogramacion from './pages/AudioReprogramacion';
+import AudioReactividad from './pages/AudioReactividad';
 
 // ScrollToTop component to handle scroll reset on route change
 const ScrollToTop = () => {
@@ -115,6 +116,14 @@ const App: React.FC = () => {
           element={
             <Layout>
               <AudioReprogramacion />
+            </Layout>
+          }
+        />
+        <Route
+          path="/audio-reactividad"
+          element={
+            <Layout>
+              <AudioReactividad />
             </Layout>
           }
         />
