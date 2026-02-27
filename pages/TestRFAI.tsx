@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Activity, Brain, HeartPulse, UserCircle2, ArrowRight, ShieldCheck, ArrowLeft, CheckCircle2, BarChart3, PlayCircle } from 'lucide-react';
 
-// Video Imports
-import vDesbordado from '../src/assets/videos/Perfil Desbordado.mp4';
-import vSobreAdaptado from '../src/assets/videos/Perfil Sobre adaptado.mp4';
-import vHiperRegulado from '../src/assets/videos/Perfil hiperregulado.mp4';
-import vInhibido from '../src/assets/videos/Perfil inhibido.mp4';
-import vHiperReactivo from '../src/assets/videos/Perfil reactivo .mp4';
+// Video URLs: Actualmente en formato remoto/externo para evitar colapsar GitHub y el servidor.
+// Idealmente aquí colocaríamos links de YouTube ocultos, Vimeo, o un servidor externo S3.
+const vDesbordado = ''; // Ej: "https://www.youtube.com/embed/XXXXXX"
+const vSobreAdaptado = '';
+const vHiperRegulado = '';
+const vInhibido = '';
+const vHiperReactivo = '';
 
 const questions = [
     // ACTIVACIÓN FISIOLÓGICA (1-7)
@@ -445,17 +446,27 @@ const TestRFAI: React.FC = () => {
                                 Nuestro equipo ha preparado una explicación detallada sobre cómo afrontar la <strong>{results.perfil}</strong> y cuáles son los siguientes pasos para recuperar el control.
                             </p>
 
-                            {profileVideo && (
+                            {profileVideo ? (
                                 <div className="max-w-xl mx-auto mb-10 overflow-hidden rounded-xl shadow-luxury group relative bg-black/5">
-                                    <video
-                                        src={profileVideo}
-                                        controls
-                                        controlsList="nodownload"
-                                        poster="../src/assets/images/logo.png"
-                                        className="w-full h-auto aspect-video object-cover"
-                                    />
+                                    {profileVideo.includes('youtube') || profileVideo.includes('vimeo') ? (
+                                        <iframe
+                                            src={profileVideo}
+                                            className="w-full h-auto aspect-video object-cover"
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
+                                    ) : (
+                                        <video
+                                            src={profileVideo}
+                                            controls
+                                            controlsList="nodownload"
+                                            poster="../src/assets/images/logo.png"
+                                            className="w-full h-auto aspect-video object-cover"
+                                        />
+                                    )}
                                 </div>
-                            )}
+                            ) : null}
 
                             <div className="mt-8 flex flex-col justify-center gap-4 relative z-10">
                                 {paymentLink && (
