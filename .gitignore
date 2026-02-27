@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.mp4
+src/assets/videos/*.mp4
+.env
+.env.*
+!.env.example

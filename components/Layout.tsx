@@ -83,9 +83,6 @@ const Navbar: React.FC = () => {
     { name: 'Nosotros', path: '/', hash: '#about' },
     { name: 'Psiquiatría', path: '/psiquiatria' },
     { name: 'Psicología', path: '/psicologia' },
-    { name: 'Angustia', path: '/programa-angustia' },
-    { name: 'Culpa', path: '/programa-culpa' },
-    { name: 'Irritabilidad', path: '/programa-irritabilidad' },
   ];
 
   return (
@@ -118,18 +115,23 @@ const Navbar: React.FC = () => {
               </Link>
             </div>
 
-            {/* Desktop Navigation Right (Programs) */}
-            <div className="hidden md:flex flex-1 justify-end space-x-6">
-              {navLinks.slice(3, 6).map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={(e) => handleLinkClick(e, link.path, link.hash)}
-                  className="text-sm tracking-wide text-brand-text hover:text-brand-primary transition-colors font-medium hover:translate-y-1 transform duration-300"
-                >
-                  {link.name}
-                </Link>
-              ))}
+            {/* Desktop Navigation Right (Actions) */}
+            <div className="hidden md:flex flex-1 justify-end space-x-4 items-center">
+              <Link
+                to="/test-rfai"
+                onClick={() => setIsOpen(false)}
+                className="text-xs font-bold tracking-widest uppercase text-white bg-brand-heading hover:bg-brand-primary px-5 py-2.5 rounded-lg transition-all transform hover:-translate-y-0.5 shadow-md flex items-center"
+              >
+                Test Reprogramación
+              </Link>
+              <a
+                href="https://api.whatsapp.com/send/?phone=56930179724&text&type=phone_number&app_absent=0"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs font-bold tracking-widest uppercase text-brand-heading border border-brand-sand bg-white hover:bg-brand-sand/30 hover:border-brand-primary px-5 py-2.5 rounded-lg transition-all transform hover:-translate-y-0.5 shadow-sm flex items-center"
+              >
+                Contacto
+              </a>
             </div>
 
             {/* Mobile Menu Button - Enhanced for Visibility */}
@@ -185,19 +187,16 @@ const Navbar: React.FC = () => {
 
             {/* SEPARATOR & PROGRAMS */}
             <div className="w-full pt-4 pb-2">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4 text-left">Programas</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4 text-left">Evaluación Activa</p>
             </div>
 
-            {navLinks.slice(3, 6).map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                onClick={(e) => handleLinkClick(e, link.path, link.hash)}
-                className="w-full py-3 text-lg font-medium text-slate-700 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4 pl-6 border-l-2 border-transparent hover:border-brand-primary"
-              >
-                {link.name}
-              </Link>
-            ))}
+            <Link
+              to="/test-rfai"
+              onClick={() => setIsOpen(false)}
+              className="w-full py-3 text-lg font-medium text-slate-700 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-all duration-300 text-left px-4 pl-6 border-l-2 border-transparent hover:border-brand-primary"
+            >
+              Test Reprogramación
+            </Link>
 
             <div className="pt-8 w-full space-y-4 mt-auto">
               <p className="text-xs text-brand-gold uppercase tracking-widest font-bold">Atención Preferencial</p>

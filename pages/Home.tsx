@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Brain, Heart, ShieldCheck, Sparkles, Quote, Fingerprint, Microscope, Users } from 'lucide-react';
-import { api } from '../src/services/api';
-import { Program } from '../types';
 
 import heroNeuroscience from '../src/assets/images/hero-neuroscience.png';
 import heroClinical from '../src/assets/images/hero-clinical.jpg';
@@ -16,10 +14,6 @@ import servicePsychology from '../src/assets/images/service-psychology.png';
 import heroImage1 from '../src/assets/images/1.png';
 import heroImage5 from '../src/assets/images/5.png';
 import heroImage7 from '../src/assets/images/7.png';
-
-import programAngustia from '../src/assets/images/program-angustia.png';
-import programCulpa from '../src/assets/images/program-culpa.png';
-import programIrritabilidad from '../src/assets/images/program-irritabilidad.jpg';
 
 const slides = [
    {
@@ -59,8 +53,6 @@ const slides = [
 
 const Home: React.FC = () => {
    const [currentSlide, setCurrentSlide] = useState(0);
-   const [programs, setPrograms] = useState<Program[]>([]);
-   const [loadingPrograms, setLoadingPrograms] = useState(true);
 
    useEffect(() => {
       const timer = setInterval(() => {
@@ -68,27 +60,6 @@ const Home: React.FC = () => {
       }, 6000); // 6 seconds per slide
       return () => clearInterval(timer);
    }, []);
-
-   useEffect(() => {
-      const fetchPrograms = async () => {
-         try {
-            const data = await api.getPrograms();
-            setPrograms(data);
-         } catch (error) {
-            console.error("Failed to load programs", error);
-         } finally {
-            setLoadingPrograms(false);
-         }
-      };
-      fetchPrograms();
-   }, []);
-
-   const resolveProgramImage = (slug: string) => {
-      if (slug.includes('angustia')) return programAngustia;
-      if (slug.includes('culpa')) return programCulpa;
-      if (slug.includes('irritabilidad')) return programIrritabilidad;
-      return programAngustia; // Default fallback
-   };
 
    return (
       <div className="animate-fade-in">
@@ -276,68 +247,30 @@ const Home: React.FC = () => {
             </div>
          </section>
 
-         {/* Programs Section */}
-         <section id="programs" className="py-20 md:py-32 bg-white">
-            <div className="max-w-7xl mx-auto px-6 lg:px-8">
-               <div className="text-center max-w-2xl mx-auto mb-16 md:mb-24">
-                  <span className="text-brand-gold text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase block mb-4 md:mb-6 animate-fade-in-down">Programas High-Ticket</span>
-                  <h2 className="text-3xl md:text-5xl font-serif text-brand-heading mb-6 md:mb-8 animate-fade-in-down" style={{ animationDelay: '0.2s' }}>Procesos de Reprogramación</h2>
-                  <p className="text-slate-500 text-base md:text-lg font-light leading-relaxed animate-fade-in-down" style={{ animationDelay: '0.3s' }}>
-                     Intervenciones intensivas de 4 semanas diseñadas para desactivar patrones limitantes y restaurar tu soberanía emocional.
-                  </p>
-               </div>
+         {/* Test/Contact Section */}
+         <section id="evaluacion" className="py-20 md:py-32 bg-white">
+            <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+               <span className="text-brand-gold text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase block mb-4 md:mb-6 animate-fade-in-down">Evaluación y Transformación</span>
+               <h2 className="text-3xl md:text-5xl font-serif text-brand-heading mb-6 md:mb-8 animate-fade-in-down" style={{ animationDelay: '0.2s' }}>Procesos de Reprogramación</h2>
+               <p className="text-slate-500 text-base md:text-lg font-light leading-relaxed animate-fade-in-down mb-12" style={{ animationDelay: '0.3s' }}>
+                  Realiza nuestra autoevaluación clínica integral para conocer tu perfil de activación y capacidad regulatoria, o ponte en contacto con nosotros para recibir una orientación personalizada.
+               </p>
 
-               <div className="space-y-16 md:space-y-24 mb-24">
-
-                  {loadingPrograms && (
-                     <div className="text-center py-12 text-gray-400">
-                        Cargando programas disponibles...
-                     </div>
-                  )}
-
-                  {!loadingPrograms && programs.map((program, index) => (
-                     <div
-                        key={program.id}
-                        className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center animate-fade-in-down"
-                        style={{ animationDelay: `${0.4 + (index * 0.2)}s` }}
-                     >
-                        {/* Visual Order Zig-Zag */}
-                        <div className={`order-1 ${index % 2 === 1 ? 'lg:order-2 lg:pl-12' : 'lg:order-1'}`}>
-                           <div className="relative aspect-square md:aspect-square overflow-hidden rounded-sm shadow-luxury group border-4 border-white">
-                              <img
-                                 src={resolveProgramImage(program.slug)}
-                                 alt={program.title}
-                                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                                 loading="lazy"
-                              />
-                              {index === 2 ? (
-                                 <div className="absolute top-4 right-4 bg-brand-gold/90 backdrop-blur px-3 py-1 rounded-sm text-xs font-bold text-white shadow-sm flex items-center gap-1">
-                                    <Sparkles size={10} /> SOLO 5 CUPOS
-                                 </div>
-                              ) : (
-                                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-sm text-xs font-bold text-brand-heading shadow-sm">
-                                    PREMIUM
-                                 </div>
-                              )}
-                           </div>
-                        </div>
-
-                        <div className={`order-2 ${index % 2 === 1 ? 'lg:order-1 lg:pr-12' : 'lg:order-2 lg:pl-12'}`}>
-                           <span className="block text-brand-primary text-xs tracking-widest uppercase mb-3">{program.subtitle}</span>
-                           <h3 className="text-3xl md:text-5xl font-serif text-brand-heading mb-4 md:mb-6">{program.title}</h3>
-                           <p className="text-base md:text-lg text-slate-500 mb-8 leading-relaxed font-light">
-                              {program.shortDescription}
-                           </p>
-                           <Link
-                              to={`/${program.slug}`}
-                              className="w-full md:w-auto inline-flex items-center justify-center px-10 py-4 bg-brand-heading text-white rounded-lg hover:bg-brand-primary transition-all duration-300 shadow-lg hover:shadow-cyan-200/50 text-sm font-bold tracking-wide transform hover:translate-y-1"
-                           >
-                              Ver Detalle del Programa
-                           </Link>
-                        </div>
-                     </div>
-                  ))}
-
+               <div className="flex flex-col sm:flex-row justify-center gap-6 animate-fade-in-down" style={{ animationDelay: '0.4s' }}>
+                  <Link
+                     to="/test-rfai"
+                     className="inline-flex items-center justify-center px-10 py-5 bg-brand-heading text-white rounded-xl hover:bg-brand-primary transition-all duration-300 shadow-xl hover:shadow-cyan-200/50 text-sm font-bold tracking-widest uppercase transform hover:-translate-y-1"
+                  >
+                     Test Reprogramación
+                  </Link>
+                  <a
+                     href="https://api.whatsapp.com/send/?phone=56930179724&text&type=phone_number&app_absent=0"
+                     target="_blank"
+                     rel="noreferrer"
+                     className="inline-flex items-center justify-center px-10 py-5 bg-white border-2 border-brand-sand text-brand-heading rounded-xl hover:bg-brand-sand/30 hover:border-brand-primary transition-all duration-300 shadow-md text-sm font-bold tracking-widest uppercase transform hover:-translate-y-1"
+                  >
+                     Contacto
+                  </a>
                </div>
             </div>
          </section>

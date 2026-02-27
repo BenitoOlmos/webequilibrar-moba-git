@@ -1,42 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, Brain, HeartPulse, UserCircle2, ArrowRight, ShieldCheck, ArrowLeft, CheckCircle2, BarChart3 } from 'lucide-react';
+import { Activity, Brain, HeartPulse, UserCircle2, ArrowRight, ShieldCheck, ArrowLeft, CheckCircle2, BarChart3, PlayCircle } from 'lucide-react';
+
+// Video Imports
+import vDesbordado from '../src/assets/videos/Perfil Desbordado.mp4';
+import vSobreAdaptado from '../src/assets/videos/Perfil Sobre adaptado.mp4';
+import vHiperRegulado from '../src/assets/videos/Perfil hiperregulado.mp4';
+import vInhibido from '../src/assets/videos/Perfil inhibido.mp4';
+import vHiperReactivo from '../src/assets/videos/Perfil reactivo .mp4';
 
 const questions = [
     // ACTIVACIÓN FISIOLÓGICA (1-7)
-    "1. Siento tensión muscular sin darme cuenta.",
-    "2. Me cuesta dormir o despierto con el cuerpo activado.",
-    "3. Mi respiración se vuelve superficial cuando me inquieto.",
-    "4. Siento opresión corporal frente a situaciones cotidianas.",
-    "5. Mi cuerpo se acelera sin motivo claro.",
-    "6. Me cuesta relajar el cuerpo incluso cuando puedo hacerlo.",
-    "7. Mi digestión se altera bajo presión.",
+    "1. Siento tensión muscular constantemente.",
+    "2. Me cuesta conciliar el sueño o me despierto con sobresaltos en la noche.",
+    "3. Me doy cuenta que suspiro seguido o que mi respiración está acelerada.",
+    "4. Mi cuerpo se siente presionado a diario.",
+    "5. Siento como si funcionara de manera acelerada, sin motivo claro.",
+    "6. Cuando intento relajar el cuerpo me aparece dolor de cuello u hombros.",
+    "7. Tengo síntomas de alteraciones digestivas/estomacales de manera recurrente.",
 
     // ACTIVACIÓN MENTAL (8-14)
-    "8. Mi mente se queda pegada a un tema.",
-    "9. Anticipo escenarios negativos.",
-    "10. Siento urgencia mental constante.",
+    "8. Mi mente se obsesiona con algunos temas y no deja de analizarlos.",
+    "9. Mi mente tiende a crear escenarios negativos o catastróficos.",
+    "10. No paro de pensar en todo el día.",
     "11. Me critico internamente con dureza.",
-    "12. Me cuesta apagar la mente.",
-    "13. Sobreanalizo situaciones.",
-    "14. Me cuesta estar presente.",
+    "12. Me cuesta desconectarme de lo que pienso al intentar dormir.",
+    "13. Sobre analizo las situaciones, buscando estar preparado/a para lo que venga.",
+    "14. Tiendo a tener mi atención puesta en el futuro y/o el pasado.",
 
     // ACTIVACIÓN EMOCIONAL (15-21)
     "15. Me irrito con facilidad.",
-    "16. Siento angustia sin causa clara.",
-    "17. Siento culpa aunque sé que no corresponde.",
-    "18. Mis emociones suben rápido.",
+    "16. Siento frecuentemente emociones intensas en el pecho.",
+    "17. Siento culpa por las cosas que ocurren en mi vida.",
+    "18. Mis emociones se intensifican de manera abrupta.",
     "19. Me cuesta tolerar frustraciones.",
-    "20. Me siento hiperreactivo(a).",
-    "21. Me cuesta sostener calma emocional.",
+    "20. Me siento incapaz de procesar lo que siento en estos días.",
+    "21. Los períodos de calma tienden a durar poco tiempo.",
 
     // REGULACIÓN (22-28)
-    "22. Noto cuándo me estoy acelerando.",
-    "23. Puedo calmarme sin dañarme.",
-    "24. Puedo hablarme con respeto.",
-    "25. Logro volver a estabilidad.",
-    "26. Puedo pedir apoyo.",
-    "27. Tengo prácticas que me regulan.",
-    "28. Puedo volver al presente."
+    "22. Noto cuándo mi cuerpo se acelera y puedo calmarlo.",
+    "23. Soy capaz de volver a sentirme seguro/a cuando pierdo la calma.",
+    "24. Mi diálogo interno es positivo y me trato internamente como si fuera mi mejor amigo/a.",
+    "25. Tengo la capacidad de dejar de pensar en lo que podría pasar.",
+    "26. Sé reconocer cuando necesito ayuda y soy capaz de pedir apoyo.",
+    "27. Tengo prácticas de autocuidado diario que me regulan.",
+    "28. Puedo reconocer cuando mi pensamiento se obsesiona y sé cómo calmarlo."
 ];
 
 const scaleOptions = [
@@ -63,6 +70,7 @@ interface ResultsType {
     amText: string;
     aeText: string;
     rText: string;
+    interrelacion: string;
 }
 
 const TestRFAI: React.FC = () => {
@@ -145,13 +153,38 @@ const TestRFAI: React.FC = () => {
         else if (IDSE >= 20 && IDSE <= 49) interpretacion = "Desbalance moderado. Consumo excesivo de recursos por sobre-activación de las bases biológicas.";
         else interpretacion = "Desbalance alto. Consumo excesivo prolongado que puede llevar a síndromes tensionales, disregulación anímica o agotamiento funcional.";
 
-        let perfil = "No definido claramente";
-        if (ITA <= 27 && R >= 10) perfil = "Regulado";
-        else if (ITA >= 54 && R >= 10 && R <= 18) perfil = "Reactivo";
-        else if (ITA >= 54 && R <= 9) perfil = "Desbordado";
-        else if (ITA <= 27 && R <= 9) perfil = "Inhibido";
-        else if (ITA >= 28 && ITA <= 53 && R >= 19) perfil = "Adaptativo";
-        else perfil = "Transicional";
+        let perfil = "Subtipo funcional";
+        if (ITA <= 27) {
+            if (R >= 10) perfil = "Hiper Regulado";
+            else perfil = "Inhibido";
+        } else if (ITA >= 28 && ITA <= 54) {
+            if (R >= 19) perfil = "Sobre Adaptado";
+            else perfil = "Posible Sobre adaptación o hiperreactividad evaluar síntomas de auto control percibido y estrés";
+        } else if (ITA >= 55) {
+            if (R <= 9) perfil = "Desbordado";
+            else if (R >= 10 && R <= 18) perfil = "Hiper Reactivo";
+            else if (R >= 19) {
+                if (AM >= 19 && AE >= 19) perfil = "Funcionalidad sostenida con sobre pensamiento y desbordes emocionales";
+                else perfil = "Regulación funcional bajo entorno de estrés sostenido";
+            }
+        }
+
+        let interrelacion = "Perfil de Estabilidad Funcional.";
+        if (AF <= 9 && AM <= 9 && AE <= 9) {
+            interrelacion = "Estado depresivo.";
+        } else if (AF >= 19 && AM >= 19 && AE >= 19) {
+            interrelacion = "Desborde generalizado del sistema.";
+        } else if (AM >= 19 && AE >= 19) {
+            interrelacion = "Funcionalidad sostenida con sobre pensamiento y desbordes emocionales.";
+        } else if (AF >= AM + 6 && AF >= AE + 6) {
+            interrelacion = "Funcionalidad sostenida con desregulación fisiológica.";
+        } else if (AM >= AE + 6) {
+            interrelacion = "Funcionalidad sostenida desde un predominio cognitivo sobre lo emocional.";
+        } else if (AE >= AM + 6) {
+            interrelacion = "Funcionalidad sostenida desde un predominio emocional con baja elaboración cognitiva.";
+        } else if (Math.abs(AF - AM) < 6 && Math.abs(AF - AE) < 6 && Math.abs(AM - AE) < 6) {
+            interrelacion = "Balance funcional sin diferencias marcadas igual o superiores a 6 puntos.";
+        }
 
         const getActvText = (score: number, type: 'AF' | 'AM' | 'AE') => {
             if (type === 'AF') {
@@ -169,18 +202,21 @@ const TestRFAI: React.FC = () => {
             }
         };
 
-        const getRegText = (score: number) => {
-            if (score <= 9) return "Tus herramientas para calmarte son escasas. Es probable que te sientas desprotegido(a) frente a tus propios estados de activación.";
-            if (score <= 18) return "Reconoces cuándo te aceleras y tienes algunas prácticas para volver a la calma, aunque no siempre son suficientes en crisis.";
-            return "Tienes una relación sólida contigo mismo(a); sabes pedir apoyo, hablarte con respeto y volver a la estabilidad de forma autónoma.";
+        const getRegText = (score: number, r_ita: number, r_idse: number, isBajaActivacion: boolean) => {
+            if (score >= 19 && r_idse >= 20) return "Sobre esfuerzo en la compensación de síntomas.";
+            if (score <= 9 && isBajaActivacion) return "Atención a síntomas depresivos.";
+
+            if (score <= 9) return "Dificultad para recuperar equilibrio.";
+            if (score <= 18) return "Recursos presentes pero inestables.";
+            return "Capacidad de retorno al equilibrio instalada.";
         };
 
         const afText = getActvText(AF, 'AF');
         const amText = getActvText(AM, 'AM');
         const aeText = getActvText(AE, 'AE');
-        const rText = getRegText(R);
+        const rText = getRegText(R, ITA, IDSE, ITA <= 27 || (AF <= 9 && AM <= 9 && AE <= 9));
 
-        return { AF, AM, AE, R, ITA, Re, IDSE, interpretacion, perfil, afText, amText, aeText, rText };
+        return { AF, AM, AE, R, ITA, Re, IDSE, interpretacion, perfil, afText, amText, aeText, rText, interrelacion };
     };
 
     const handleSubmit = async () => {
@@ -204,7 +240,7 @@ const TestRFAI: React.FC = () => {
         formData.append("Re", calculatedResults.Re.toString());
         formData.append("IDSE", calculatedResults.IDSE.toString());
         formData.append("interpretacion", calculatedResults.interpretacion);
-        formData.append("perfil", calculatedResults.perfil);
+        formData.append("perfil", `${calculatedResults.perfil} | ${calculatedResults.interrelacion}`);
 
         try {
             await fetch(GOOGLE_SCRIPT_URL, {
@@ -252,6 +288,25 @@ const TestRFAI: React.FC = () => {
         const maxScore = 28;
         const maxITA = 84;
         const getPercent = (val: number, max: number = maxScore) => Math.min((val / max) * 100, 100);
+
+        const paymentLinks: Record<string, string> = {
+            "Hiper Regulado": "https://mpago.la/1oGPijS",
+            "Desbordado": "https://mpago.la/23c42on",
+            "Hiper Reactivo": "https://mpago.la/2fyyjrJ",
+            "Inhibido": "https://mpago.la/2TXMsQo",
+            "Sobre Adaptado": "https://mpago.la/1UCQXap"
+        };
+        const paymentLink = paymentLinks[results.perfil];
+
+        const videoLinks: Record<string, string> = {
+            "Hiper Regulado": vHiperRegulado,
+            "Desbordado": vDesbordado,
+            "Hiper Reactivo": vHiperReactivo,
+            "Inhibido": vInhibido,
+            "Sobre Adaptado": vSobreAdaptado
+        };
+        const matchProfile = results.perfil.split(" | ")[0].trim();
+        const profileVideo = videoLinks[matchProfile] || videoLinks[results.perfil];
 
         return (
             <div className="py-12 md:py-24 bg-brand-surface min-h-screen">
@@ -338,9 +393,10 @@ const TestRFAI: React.FC = () => {
                                     <span className={`text-4xl font-bold ${results.IDSE > 19 ? 'text-red-500' : 'text-brand-primary'}`}>{results.IDSE}</span>
                                 </div>
 
-                                <p className="text-sm md:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto mb-10 pb-6 border-b border-brand-sand/50">
-                                    <strong className="text-slate-800">Interpretación Global:</strong> {results.interpretacion}
-                                </p>
+                                <div className="text-sm md:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto mb-10 pb-6 border-b border-brand-sand/50 space-y-4">
+                                    <p><strong className="text-slate-800">Interpretación Global:</strong> {results.interpretacion}</p>
+                                    <p><strong className="text-slate-800">Interrelación Sistemática:</strong> {results.interrelacion}</p>
+                                </div>
 
                                 {/* Gráfico de Síntesis */}
                                 <div>
@@ -381,26 +437,59 @@ const TestRFAI: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="text-center mt-12 bg-slate-50 p-6 rounded-xl border border-slate-100">
-                            <p className="text-xs md:text-sm text-slate-500 font-light italic">
-                                * Nota: Este resultado no es un instrumento diagnóstico y tiene fines psicoeducativos.
-                                Debe complementarse con evaluación profesional para un diagnóstico clínico y tratamiento adecuado.
+                        <div className="text-center mt-12 bg-slate-50 p-6 md:p-10 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-gold via-brand-primary to-brand-gold"></div>
+
+                            <h3 className="text-2xl font-serif text-brand-heading mb-3">Conoce más sobre tu perfil</h3>
+                            <p className="text-sm text-slate-500 mb-8 max-w-lg mx-auto">
+                                Nuestro equipo ha preparado una explicación detallada sobre cómo afrontar la <strong>{results.perfil}</strong> y cuáles son los siguientes pasos para recuperar el control.
                             </p>
 
-                            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
+                            {profileVideo && (
+                                <div className="max-w-xl mx-auto mb-10 overflow-hidden rounded-xl shadow-luxury group relative bg-black/5">
+                                    <video
+                                        src={profileVideo}
+                                        controls
+                                        controlsList="nodownload"
+                                        poster="../src/assets/images/logo.png"
+                                        className="w-full h-auto aspect-video object-cover"
+                                    />
+                                </div>
+                            )}
+
+                            <div className="mt-8 flex flex-col justify-center gap-4 relative z-10">
+                                {paymentLink && (
+                                    <a
+                                        href={paymentLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full sm:max-w-md mx-auto px-6 py-4 bg-brand-heading text-white rounded-xl hover:bg-brand-primary transition-all duration-300 transform hover:-translate-y-1 text-sm font-bold tracking-widest uppercase shadow-xl hover:shadow-cyan-200/50 flex items-center justify-center gap-2 border border-brand-primary/20"
+                                    >
+                                        Pagar Programa Restitutivo
+                                    </a>
+                                )}
+
+                                <a
+                                    href={`https://api.whatsapp.com/send/?phone=56930179724&text=Hola, acabo de terminar mi test y mi perfil es ${encodeURIComponent(results.perfil)}. Quisiera solicitar más detalles y dar el siguiente paso.&type=phone_number&app_absent=0`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full sm:max-w-md mx-auto px-6 py-4 bg-white border-2 border-[#25D366] text-[#25D366] rounded-xl hover:bg-[#25D366] hover:text-white transition-all duration-300 transform hover:-translate-y-1 text-sm font-bold tracking-widest uppercase shadow-md flex items-center justify-center gap-2"
+                                >
+                                    Escríbenos por WhatsApp
+                                </a>
+
                                 <button
                                     onClick={() => { setShowResults(false); setAnswers(Array(28).fill(-1)); setUserInfo({ name: '', email: '' }); setStep(0); window.scrollTo(0, 0) }}
-                                    className="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded hover:bg-slate-50 transition-colors text-xs font-bold tracking-widest uppercase w-full sm:w-auto"
+                                    className="mt-6 px-6 py-2 bg-transparent text-slate-400 hover:text-slate-600 transition-colors text-[10px] uppercase tracking-widest underline w-full sm:w-auto mx-auto"
                                 >
                                     Repetir Test
                                 </button>
-                                <a
-                                    href="/#/reserva"
-                                    className="px-6 py-3 bg-brand-primary text-white rounded hover:bg-brand-primary/90 transition-colors text-xs font-bold tracking-widest uppercase shadow-md shadow-brand-primary/20 w-full sm:w-auto"
-                                >
-                                    Agendar Hora de Evaluación
-                                </a>
                             </div>
+
+                            <p className="text-[10px] md:text-xs text-slate-400 font-light italic mt-10 max-w-xl mx-auto">
+                                * Nota: Este resultado no es un instrumento diagnóstico y tiene fines psicoeducativos.
+                                Debe complementarse con evaluación clínica profesional adecuada.
+                            </p>
                         </div>
 
                     </div>
