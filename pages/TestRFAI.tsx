@@ -336,7 +336,8 @@ const TestRFAI: React.FC = () => {
 
         return (
             <div className="bg-[#f7fafc] min-h-screen text-[#0b1220] font-sans antialiased overflow-x-hidden">
-                <style dangerouslySetInnerHTML={{__html: `
+                <style dangerouslySetInnerHTML={{
+                    __html: `
                     :root {
                         --bg: #f7fafc;
                         --ink: #0b1220;
@@ -400,7 +401,7 @@ const TestRFAI: React.FC = () => {
                         font-weight: 800;
                     }
                     .hero {
-                        padding: 52px 0 18px;
+                        padding: 12px 0 18px;
                         position: relative;
                         overflow: hidden;
                         background: radial-gradient(900px 420px at 20% 0%, rgba(42,166,184,.14), transparent 60%), radial-gradient(900px 420px at 80% 0%, rgba(15,31,51,.10), transparent 60%);
@@ -538,24 +539,6 @@ const TestRFAI: React.FC = () => {
                     }
                 `}} />
 
-                <header className="topbar">
-                    <div className="custom-container">
-                        <div className="flex items-center justify-between gap-[14px] py-[14px] px-2">
-                            <a className="flex items-center gap-[12px] no-underline" href="/" aria-label="Centro Clínico Equilibrar">
-                                <div className="mark" aria-hidden="true"></div>
-                                <div>
-                                    <b className="block text-[13px] tracking-[.2px] text-[#0f1f33]">Centro Clínico Equilibrar</b>
-                                    <span className="block text-[12px] text-[var(--muted2)]">RFAI • Reprogramación Focalizada</span>
-                                </div>
-                            </a>
-                            <nav className="nav flex items-center gap-[10px] flex-wrap justify-end" aria-label="Navegación">
-                                <button onClick={() => { setShowResults(false); setStep(0); setAnswers(Array(28).fill(-1)); window.scrollTo(0,0); }} className="pill cursor-pointer hover:text-brand-primary">Rehacer Test</button>
-                                <a className="pill cta hover:scale-105 transition-transform" href="#comprar">Avanzar al Tratamiento</a>
-                            </nav>
-                        </div>
-                    </div>
-                </header>
-
                 <section className="hero" id="top">
                     <div className="custom-container">
                         <div className="flex items-center justify-between gap-4 mb-10 bg-white/60 p-5 rounded-[22px] border border-[var(--line)] shadow-[var(--shadow2)] backdrop-blur-md">
@@ -581,7 +564,7 @@ const TestRFAI: React.FC = () => {
                                     <b>Cambia este resultado en tu vida</b> con un protocolo guiado de 30 días para reprogramar la respuesta biológica.
                                 </div>
                                 <div className="flex gap-[10px] flex-wrap items-center mt-6">
-                                    <a className="btn-custom primary" href="#comprar">Avanzar e Ingresar al Programa (↓)</a>
+                                    <a className="btn-custom primary" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Avanzar e Ingresar al Programa (↓)</a>
                                     <a className="btn-custom" href="#video">Ver video de tu diagnóstico (2 min)</a>
                                 </div>
                                 <div className="hint mt-8">
@@ -616,7 +599,7 @@ const TestRFAI: React.FC = () => {
                         </div>
                         <div className="card-custom p-[22px]">
                             <h2 className="m-0 mb-[12px] text-[24px] tracking-[-.2px] text-[var(--navy)] font-serif">Por qué se sostiene el {activeProfile.subtitle} en ti</h2>
-                            <p className="m-0 mb-[16px] text-[var(--muted)] leading-relaxed" dangerouslySetInnerHTML={{__html: activeProfile.origin.replace(/'([^']+)'/g, "<b>'$1'</b>")}}></p>
+                            <p className="m-0 mb-[16px] text-[var(--muted)] leading-relaxed" dangerouslySetInnerHTML={{ __html: activeProfile.origin.replace(/'([^']+)'/g, "<b>'$1'</b>") }}></p>
                             <p className="m-0 mb-[4px] text-[12px] uppercase font-bold text-[var(--teal)]">SÍNTESIS ESPECÍFICA DE TUS VARIABLES:</p>
                             <p className="m-0 text-[14px] text-[var(--navy)]">{results.interrelacion} ({results.ITA} de carga frente a {results.Re} de recursos)</p>
                         </div>
@@ -632,8 +615,8 @@ const TestRFAI: React.FC = () => {
                                 <iframe src={activeProfile.video} title={`Video perfil ${activeProfile.subtitle}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="w-full h-full border-0 absolute top-0 left-0"></iframe>
                             </div>
                             <div className="flex gap-[16px] flex-wrap items-center justify-center mt-[24px]">
-                                <a className="btn-custom primary text-base px-8 py-4" href="#comprar">Proceder a la Solución de 30 días</a>
-                                <a className="btn-custom text-base px-8 py-4" href="#incluye">Ver contenido de la solución paso a paso</a>
+                                <a className="btn-custom primary text-base px-8 py-4" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Proceder a la Solución de 30 días</a>
+                                <a className="btn-custom text-base px-8 py-4" href={`https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${wpMsg}`} target="_blank" rel="noopener noreferrer">Ver contenido de la solución paso a paso</a>
                             </div>
                         </div>
                     </div>
@@ -644,7 +627,7 @@ const TestRFAI: React.FC = () => {
                         <div className="card-custom p-[24px] md:p-[32px]">
                             <h2 className="m-0 mb-[10px] text-[28px] tracking-[-.2px] text-[var(--navy)] font-serif">Cómo transicionarlo (Protocolo RFAI • 30 días)</h2>
                             <p className="m-0 mb-[24px] text-[var(--muted)] text-[16px] max-w-3xl">Un protocolo estricto clínico-práctico totalmente fundado en tu neuroplasticidad para reorganizar tu respuesta inconsciente. El programa no intentará forzar tu memoria, <b>te guiará para asentar respuestas biológicas de paz interior duradera</b>.</p>
-                            
+
                             <div className="value-grid">
                                 <div className="value hover:-translate-y-1 transition-transform">
                                     <div className="icon">1</div>
@@ -712,7 +695,7 @@ const TestRFAI: React.FC = () => {
 
                 <footer className="pt-[32px] pb-[90px] md:pb-[70px] border-t border-[var(--line)] text-[var(--muted2)] text-[12px] md:text-[14px]">
                     <div className="custom-container text-center text-slate-400">
-                        © Centro Clínico Equilibrar • RFAI — Reprogramación Focalizada de Alto Impacto • Enfoque Clínico Especializado.<br/>La información arrojada y expuesta en este sitio es informativa y no reemplaza diagnóstico médico oficial.
+                        © Centro Clínico Equilibrar • RFAI — Reprogramación Focalizada de Alto Impacto • Enfoque Clínico Especializado.<br />La información arrojada y expuesta en este sitio es informativa y no reemplaza diagnóstico médico oficial.
                     </div>
                 </footer>
 
