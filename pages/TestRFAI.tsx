@@ -251,9 +251,9 @@ const TestRFAI: React.FC = () => {
                 },
                 body: formData.toString()
             });
-
             setResults(calculatedResults);
             setShowResults(true);
+            window.scrollTo(0, 0);
         } catch (err) {
             console.error("Error al enviar los datos:", err);
             setError("Hubo un problema al enviar sus resultados. Por favor intente más tarde.");
@@ -565,7 +565,7 @@ const TestRFAI: React.FC = () => {
                                 </div>
                                 <div className="flex gap-[10px] flex-wrap items-center mt-6">
                                     <a className="btn-custom primary" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Avanzar e Ingresar al Programa (↓)</a>
-                                    <a className="btn-custom" href="#video">Ver video de tu diagnóstico (2 min)</a>
+                                    <button className="btn-custom cursor-pointer" onClick={(e) => { e.preventDefault(); document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' }); }}>Ver video de tu diagnóstico (2 min)</button>
                                 </div>
                                 <div className="hint mt-8">
                                     <div className="w-[32px] h-[32px] rounded-full border border-[var(--line)] bg-white flex items-center justify-center shadow-[var(--shadow2)] text-lg">↓</div>
