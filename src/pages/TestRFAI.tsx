@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Activity, Brain, HeartPulse, UserCircle2, ArrowRight, ShieldCheck, ArrowLeft, CheckCircle2, BarChart3, PlayCircle } from 'lucide-react';
+import { profilesData } from '../data/testRFAIProfiles';
 
 // Video URLs (YouTube Embeds)
 const vDesbordado = 'https://www.youtube.com/embed/SU_K-Qt4tf8';
@@ -139,13 +140,73 @@ const TestRFAI: React.FC = () => {
         const sumRange = (start: number, end: number) =>
             answers.slice(start, end).reduce((a, b) => a + (b === -1 ? 0 : b), 0);
 
-        const AF = sumRange(0, 7);
-        const AM = sumRange(7, 14);
-        const AE = sumRange(14, 21);
-        const R = sumRange(21, 28);
+        // 1. Variables del test
+        const F = sumRange(0, 7); // Activación Fisiológica (AF)
+        const C = sumRange(7, 14); // Activación Cognitiva (AM)
+        const E = sumRange(14, 21); // Activación Emocional (AE)
+        const pureR = sumRange(21, 28); // Regulación Base
 
-        const ITA = AF + AM + AE;
-        const Re = R * 3;
+        // 3. Cálculo de activación global y Regulación
+        const R_total = pureR * 3; // Regulación Total (0-84)
+        const A = C + E + F; // Activación global (0-84)
+
+        // 4. Coherencia entre sistemas
+        const D = Math.max(C, E, F) - Math.min(C, E, F);
+
+        let perfil = "Indeterminado"; // Por defecto, asume requerir evaluación
+        let requiresProfessional = false;
+
+        // 7. Reglas de derivación (D >= 9 es Incoherencia)
+        if (D >= 9) {
+            requiresProfessional = true;
+        }
+
+        // 5 & 6. Reglas de clasificación
+        if (!requiresProfessional) {
+            // Perfil Inhibido
+            if (A <= 27 && R_total <= 54 && D <= 8) {
+                perfil = "Inhibido";
+            }
+            // Perfil Hiperreactivo
+            else if (A >= 55 && R_total <= 27 && (E >= 19 || F >= 19) && D <= 8) {
+                if (E <= 9) requiresProfessional = true; // Excepción
+                else perfil = "Hiper Reactivo";
+            }
+            // Perfil Hiperregulado
+            else if (C >= 19 && R_total >= 55 && E <= 18 && A >= 28 && D <= 8) {
+                if (F >= 19 && E <= 9) requiresProfessional = true; // Excepción
+                else perfil = "Hiper Regulado";
+            }
+            // Perfil Sobre Adaptado
+            else if (R_total >= 55 && A >= 28 && A <= 54 && C >= 10 && C <= 18 && E >= 10 && E <= 18 && F >= 10 && F <= 18 && D <= 8) {
+                perfil = "Sobre Adaptado";
+            }
+            // Perfil Desregulado (Visualmente mapeado al dict como 'Desbordado')
+            else if (
+                ((A >= 55 && R_total >= 28 && R_total <= 54 && D <= 8) ||
+                    (A >= 28 && A <= 54 && R_total <= 27 && D <= 8))
+            ) {
+                perfil = "Desbordado";
+            } else {
+                requiresProfessional = true; // No cumple criterios estrictos de ninguno
+            }
+        }
+
+        if (requiresProfessional) {
+            perfil = "Indeterminado";
+        }
+
+        if (perfil === "Indeterminado") {
+            console.warn("RFAI requiere evaluación profesional", { C, E, F, R_total, A, D });
+        }
+
+        // Mapeo legacy para interrelaciones y componentes visuales previas
+        const AF = F;
+        const AM = C;
+        const AE = E;
+        const R = pureR;
+        const ITA = A;
+        const Re = R_total;
         const IDSE = ITA - Re;
 
         let interpretacion = "";
@@ -154,28 +215,9 @@ const TestRFAI: React.FC = () => {
         else if (IDSE >= 20 && IDSE <= 49) interpretacion = "Desbalance moderado. Consumo excesivo de recursos por sobre-activación de las bases biológicas.";
         else interpretacion = "Desbalance alto. Consumo excesivo prolongado que puede llevar a síndromes tensionales, disregulación anímica o agotamiento funcional.";
 
-        let perfil = "Indeterminado";
-        if (ITA <= 27) {
-            if (R >= 10) perfil = "Hiper Regulado";
-            else perfil = "Inhibido";
-        } else if (ITA >= 28 && ITA <= 54) {
-            if (R >= 19) perfil = "Sobre Adaptado";
-            else perfil = "Indeterminado";
-        } else if (ITA >= 55) {
-            if (R <= 9) perfil = "Desbordado";
-            else if (R >= 10 && R <= 18) perfil = "Hiper Reactivo";
-            else if (R >= 19) {
-                perfil = "Indeterminado";
-            }
-        }
-
-        if (perfil === "Indeterminado") {
-            console.warn("RFAI indeterminado", { AF, AM, AE, R, ITA, IDSE });
-        }
-
         let interrelacion = "Perfil de Estabilidad Funcional.";
         if (AF <= 9 && AM <= 9 && AE <= 9) {
-            interrelacion = "Estado depresivo.";
+            interrelacion = "Estado depresivo / Inhibido.";
         } else if (AF >= 19 && AM >= 19 && AE >= 19) {
             interrelacion = "Desborde generalizado del sistema.";
         } else if (AM >= 19 && AE >= 19) {
@@ -187,7 +229,7 @@ const TestRFAI: React.FC = () => {
         } else if (AE >= AM + 6) {
             interrelacion = "Funcionalidad sostenida desde un predominio emocional con baja elaboración cognitiva.";
         } else if (Math.abs(AF - AM) < 6 && Math.abs(AF - AE) < 6 && Math.abs(AM - AE) < 6) {
-            interrelacion = "Balance funcional sin diferencias marcadas igual o superiores a 6 puntos.";
+            interrelacion = "Balance funcional sin diferencias marcadas.";
         }
 
         const getActvText = (score: number, type: 'AF' | 'AM' | 'AE') => {
@@ -220,13 +262,20 @@ const TestRFAI: React.FC = () => {
         const aeText = getActvText(AE, 'AE');
         const rText = getRegText(R, ITA, IDSE, ITA <= 27 || (AF <= 9 && AM <= 9 && AE <= 9));
 
-        const level28 = (score: number) => {
-            if (score <= 9) return "bajo";
-            if (score <= 18) return "medio";
-            return "alto";
+        const level3CEF = (score: number) => {
+            if (score <= 9) return "Bajo";
+            if (score <= 18) return "Medio";
+            return "Alto";
         };
 
-        const resumenDimensional = `Fisiológicamente ${level28(AF)} · Emocionalmente ${level28(AE)} · Racionalmente ${level28(AM)} · Regulación ${level28(R)}`;
+        const level3R = (rTotalValue: number) => {
+            if (rTotalValue <= 27) return "Baja";
+            if (rTotalValue <= 54) return "Media";
+            return "Alta";
+        };
+
+        // 8. Información que siempre debe mostrarse al usuario
+        const resumenDimensional = `Resultado Cognitivo: ${level3CEF(C)} · Resultado Emocional: ${level3CEF(E)} · Resultado Fisiológico: ${level3CEF(F)} · Resultado de Regulación: ${level3R(R_total)}`;
 
         return { AF, AM, AE, R, ITA, Re, IDSE, interpretacion, perfil, afText, amText, aeText, rText, interrelacion, resumenDimensional };
     };
@@ -298,448 +347,283 @@ const TestRFAI: React.FC = () => {
     };
 
     if (showResults && results) {
-        // HTML Profile Content Dictionary
-        const profileContent: Record<string, { subtitle: string; lead: string; definition: string; origin: string; video: string; payment: string }> = {
-            "Hiper Regulado": {
-                subtitle: "HIPER REGULADO",
-                lead: "Tienes un alto control sistemático sobre tus emociones y reacciones, pero a costa de un gran esfuerzo y tensión latente. Estás en alerta, pero lo internalizas.",
-                definition: "Hiper Regulado es cuando tu sistema se ha vuelto experto en contener y apagar las señales de estrés para mantener la funcionalidad en el exterior o no ser una carga para otros. Logras funcionar bien mientras mantienes todo ajustado internamente.",
-                origin: "En entornos donde expresar emociones no era seguro, o donde debías sostener la etiqueta del 'fuerte' o el 'racional', el cerebro humano aprende a sobre-regularse. El problema es que el circuito de control queda encendido y el costo biológico silencioso es altísimo.",
-                video: "https://www.youtube.com/embed/X7v43d7U4io",
-                payment: "https://mpago.la/1oGPijS"
-            },
-            "Desbordado": {
-                subtitle: "DESBORDADO",
-                lead: "Sientes que las exigencias superan ampliamente tus herramientas psíquicas y biológicas. Tu sistema está en emergencia y la fatiga o desregulación empiezan a dominar de forma errática.",
-                definition: "Desborde ocurre cuando la carga interna o relacional es altísima y tu capacidad de modulación se quiebra, empujando al sistema nervioso a sostener un estado de hiperexcitación o emergencia generalizada.",
-                origin: "Pasa después de amplios períodos intentando 'sostener o tragar' algo sin descansos ni pausas biológicas reales. El cerebro se queda sin margen térmico para procesar información, obligándote a reaccionar bajo supervivencia biológica.",
-                video: "https://www.youtube.com/embed/SU_K-Qt4tf8",
-                payment: "https://mpago.la/23c42on"
-            },
-            "Hiper Reactivo": {
-                subtitle: "HIPER REACTIVIDAD",
-                lead: "Te activas rápido. Sientes con intensidad abrumadora. Y muchísimas veces reaccionas antes de siquiera alcanzar la claridad.",
-                definition: "Hiper Reactividad es cuando tu mente y tu cuerpo se activan como si tuvieras que defenderte de un gran peligro, aunque lo que esté sucediendo sea solo una conversación tensa, un tono alto, una señal ambigua o la simple presión de la rutina.",
-                origin: "Con el estrés temprano continuo, la alta crítica, el perfeccionismo invalidante o el miedo crónico, el circuito vital del cerebro graba a fuego: 'me anticipo agresiva o defensivamente para estar a salvo'. Ese circuito se enciende velozmente en escenarios pacíficos.",
-                video: "https://www.youtube.com/embed/Ke5JnAlBe7Y",
-                payment: "https://mpago.la/2fyyjrJ"
-            },
-            "Inhibido": {
-                subtitle: "INHIBIDO",
-                lead: "Tu sistema prioriza biológicamente la desconexión para no sentir el peso emocional. Has optado, sin querer, por escudarte tras el aplanamiento, la procrastinación inactiva o simplemente apagar la máquina.",
-                definition: "La Inhibición biológica es una respuesta natural pero extrema de conservación de energía. El cuerpo, al procesar que no tiene escapatoria física de la carga diaria que siente, decide 'ponerse en gris' para silenciar la sobrecarga.",
-                origin: "Emerge cuando la idea intrínseca de lidiar con la presión y conflictos pasados es analizada como extenuante e inoportuna. Como último recurso, el cerebro desactiva la motivación y disminuye el afecto expresivo de forma radical.",
-                video: "https://www.youtube.com/embed/liHSg0FOT9g",
-                payment: "https://mpago.la/2TXMsQo"
-            },
-            "Sobre Adaptado": {
-                subtitle: "SOBRE ADAPTADO",
-                lead: "Te amoldas perfectamente a absolutamente todas las demandas y responsabilidades de otros, cumpliendo con gran éxito, pero ignorando crónicamente tus propias necesidades, cuerpo y límites.",
-                definition: "Sobre-adaptación es seguir sosteniendo picos gigantes de estrés social o laboral utilizando excelentes recursos cognitivos de autoengaño, mientras silenciosamente dejas a tu cuerpo atrás, aplastando las señales que te exigen detenerte.",
-                origin: "Este circuito premia en exceso tu eficacia por sobre tu equilibrio individual. Suele forjarse de un niño o joven adaptado a la creencia implícita de que la estima personal, el cariño, o la estabilidad se consolidan 'resolviéndole todo y no causándole problemas a nadie'.",
-                video: "https://www.youtube.com/embed/8rIIp-15huw",
-                payment: "https://mpago.la/1UCQXap"
+        const matchProfileKey = results.perfil.split(" | ")[0].trim();
+        const activeProfile = profilesData[matchProfileKey] || profilesData["Indeterminado"];
+        const isReview = matchProfileKey === "Indeterminado";
+
+        const getLevel = (val: number, isReg: boolean) => {
+            if (isReg) {
+                if (val <= 27) return { text: 'Baja', cls: 'is-low' };
+                if (val <= 54) return { text: 'Media', cls: 'is-medium' };
+                return { text: 'Alta', cls: 'is-high' };
             }
+            if (val <= 9) return { text: 'Bajo', cls: 'is-low' };
+            if (val <= 18) return { text: 'Medio', cls: 'is-medium' };
+            return { text: 'Alto', cls: 'is-high' };
         };
 
-        const matchProfileKey = results.perfil.split(" | ")[0].trim();
-        const activeProfile = profileContent[matchProfileKey] || profileContent["Hiper Reactivo"];
-        const phoneNumber = "56930179724";
-        const wpMsg = `Hola, acabo de terminar mi test y mi perfil es ${encodeURIComponent(results.perfil)}. Quisiera solicitar más detalles y dar el siguiente paso.`;
+        const lvlE = getLevel(results.AE, false);
+        const lvlR = getLevel(results.AM, false);
+        const lvlF = getLevel(results.AF, false);
+        const lvlReg = getLevel(results.Re, true);
 
         return (
-            <div className="bg-[#f7fafc] min-h-screen text-[#0b1220] font-sans antialiased overflow-x-hidden">
+            <div className="bg-[#F6FAFF] min-h-screen text-[#0B1220] font-sans antialiased overflow-x-hidden">
                 <style dangerouslySetInnerHTML={{
                     __html: `
-                    :root {
-                        --bg: #f7fafc;
-                        --ink: #0b1220;
-                        --muted: #415164;
-                        --muted2: #6a7a8c;
-                        --line: rgba(11,18,32,.10);
-                        --card: #ffffff;
-                        --shadow: 0 18px 55px rgba(14,26,38,.10);
-                        --shadow2: 0 10px 26px rgba(14,26,38,.08);
-                        --teal: #2aa6b8;
-                        --navy: #0f1f33;
-                        --accent: #e88b3a;
-                        --ok: #10b981;
-                        --radius: 22px;
-                        --max: 1120px;
-                        --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
-                        --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+                    :root{
+                      --bg: #F6FAFF;
+                      --card: #FFFFFF;
+                      --text: #0B1220;
+                      --muted: #52607A;
+                      --line: #E5ECF6;
+                      --primary: #0F2A4A;
+                      --primary2: #1B4D7A;
+                      --accent: #2D7EF7;
+                      --soft: #EAF2FF;
+                      --ok: #E9FFF3;
+                      --okLine:#BFEFD3;
+                      --shadow: 0 12px 30px rgba(15,42,74,.10);
+                      --radius: 18px;
+                      --radius2: 22px;
+                      --max: 1120px;
                     }
-                    .custom-container { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
-                    .topbar {
-                        position: sticky; top: 0; z-index: 50;
-                        background: rgba(255,255,255,.82);
-                        backdrop-filter: blur(14px);
-                        border-bottom: 1px solid var(--line);
+                    .custom-container{max-width:var(--max);margin:0 auto;padding:0 20px}
+                    .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+                    .mark{width:34px;height:34px;border-radius:99px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px;letter-spacing:-1px}
+                    .pill{font-size:13px;font-weight:600;text-decoration:none;padding:10px 16px;border-radius:99px;border:1px solid var(--line);background:#fff;color:var(--text);transition:.2s}
+                    .pill:hover{background:var(--bg);transform:translateY(-1px)}
+                    .pill.cta{background:var(--primary);color:#fff;border:0;box-shadow:0 8px 20px rgba(15,42,74,.20)}
+                    
+                    .hero{padding:20px 0 40px;position:relative}
+                    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:start}
+                    
+                    .result-chip{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);box-shadow:var(--shadow)}
+                    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(45,126,247,.4)}70%{box-shadow:0 0 0 8px rgba(45,126,247,0)}100%{box-shadow:0 0 0 0 rgba(45,126,247,0)}}
+                    .badge-dot{width:10px;height:10px;border-radius:99px;background:var(--accent);animation:pulse 2s infinite}
+                    .h1-custom{margin:20px 0 16px;font-size:clamp(40px, 5vw, 64px);line-height:1;letter-spacing:-2px;font-weight:800;color:var(--text)}
+                    .lead{margin:0 0 24px;color:var(--muted);font-size:18px;line-height:1.6;max-width:54ch}
+                    
+                    .promise-box{padding:18px 22px;border-radius:var(--radius);background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);box-shadow:var(--shadow);font-size:15px;color:var(--text);line-height:1.5;max-width:54ch}
+                    
+                    .btn-custom{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 24px;border-radius:16px;font-size:15px;font-weight:700;text-decoration:none;transition:.2s;cursor:pointer;border:none}
+                    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 12px 30px rgba(15,42,74,.25)}
+                    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(15,42,74,.30);background:var(--primary2)}
+                    .btn-outline{background:#fff;border:1px solid var(--line);color:var(--text);box-shadow:0 4px 12px rgba(15,42,74,.05)}
+                    .btn-outline:hover{background:var(--bg)}
+                    
+                    aside{background:#fff;border-radius:var(--radius2);padding:24px;border:1px solid var(--line);box-shadow:var(--shadow)}
+                    .data-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+                    .data-row:last-child{border-bottom:0;padding-bottom:0}
+                    .data-label{font-size:13px;font-weight:600;color:var(--muted)}
+                    .data-value{font-size:14px;font-weight:700;padding:4px 12px;border-radius:8px}
+                    .is-high{background:rgba(239,68,68,.1);color:#B91C1C} /* red */
+                    .is-medium{background:rgba(245,158,11,.1);color:#B45309} /* orange */
+                    .is-low{background:rgba(16,185,129,.1);color:#047857} /* green */
+                    
+                    .section-custom{padding:60px 0}
+                    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+                    
+                    .card-custom{background:#fff;border-radius:var(--radius);padding:32px;border:1px solid var(--line);box-shadow:var(--shadow)}
+                    .h2-custom{margin:0 0 16px;font-size:28px;letter-spacing:-1px;font-weight:800;color:var(--primary)}
+                    
+                    .quote-box{padding:16px;border-radius:12px;background:var(--bg);margin-bottom:12px;font-size:15px;color:var(--text);font-style:italic;border-left:3px solid var(--line)}
+                    .quote-who{display:block;margin-top:8px;font-size:12px;font-weight:700;color:var(--muted);font-style:normal;text-transform:uppercase;letter-spacing:1px}
+                    
+                    .video-wrapper{aspect-ratio:16/9;background:#000;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);position:relative;margin:0 auto 24px;max-width:800px}
+                    .video-wrapper iframe{width:100%;height:100%;border:0;position:absolute;top:0;left:0}
+                    
+                    .step-list{list-style:none;padding:0;margin:0}
+                    .step-item{display:flex;gap:16px;margin-bottom:24px}
+                    .step-num{width:32px;height:32px;flex-shrink:0;border-radius:99px;background:var(--soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+                    .step-text{font-size:15px;color:var(--text);line-height:1.5;margin-top:5px}
+                    
+                    .price-box{background:#fff;border:2px solid var(--okLine);border-radius:var(--radius2);padding:40px;text-align:center;box-shadow:var(--shadow);max-width:500px;margin:0 auto}
+                    
+                    @media(max-width:900px){
+                      .hero-grid{grid-template-columns:1fr}
+                      .grid-2{grid-template-columns:1fr}
+                      .nav{display:none}
+                      .section-custom{padding:40px 0}
                     }
-                    .mark {
-                        width: 38px; height: 38px; border-radius: 999px;
-                        border: 2px solid rgba(42,166,184,.35);
-                        box-shadow: 0 10px 24px rgba(14,26,38,.10);
-                        background: radial-gradient(circle at 40% 40%, rgba(42,166,184,.18), transparent 55%);
-                        position: relative;
-                        overflow: hidden;
-                    }
-                    .mark:after {
-                        content: "";
-                        position: absolute; inset: 6px;
-                        border-radius: 999px;
-                        border: 2px solid rgba(42,166,184,.55);
-                        border-left-color: transparent;
-                        border-bottom-color: transparent;
-                        transform: rotate(18deg);
-                    }
-                    .pill {
-                        font-size: 12px;
-                        text-decoration: none;
-                        padding: 10px 12px;
-                        border-radius: 999px;
-                        border: 1px solid var(--line);
-                        background: #fff;
-                        color: var(--muted);
-                        box-shadow: 0 4px 14px rgba(14,26,38,.06);
-                        transition: .2s transform, .2s box-shadow;
-                        white-space: nowrap;
-                    }
-                    .pill:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(14,26,38,.10); }
-                    .pill.cta {
-                        border: 0;
-                        color: #fff;
-                        background: var(--navy);
-                        box-shadow: 0 14px 34px rgba(14,26,38,.16);
-                        font-weight: 800;
-                    }
-                    .hero {
-                        padding: 12px 0 18px;
-                        position: relative;
-                        overflow: hidden;
-                        background: radial-gradient(900px 420px at 20% 0%, rgba(42,166,184,.14), transparent 60%), radial-gradient(900px 420px at 80% 0%, rgba(15,31,51,.10), transparent 60%);
-                        border-bottom: 1px solid var(--line);
-                    }
-                    .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: start; }
-                    .result-chip {
-                        display: inline-flex; align-items: center; gap: 10px;
-                        padding: 10px 12px;
-                        border-radius: 999px;
-                        border: 1px solid var(--line);
-                        background: #fff;
-                        color: var(--muted);
-                        font-size: 12px;
-                        box-shadow: 0 10px 26px rgba(14,26,38,.08);
-                    }
-                    .badge-dot { width: 10px; height: 10px; border-radius: 999px; background: var(--accent); box-shadow: 0 0 0 6px rgba(232,139,58,.18); }
-                    .h1-custom {
-                        margin: 16px 0 10px;
-                        font-size: 52px;
-                        line-height: 1.03;
-                        letter-spacing: -1px;
-                        font-family: var(--serif);
-                        font-weight: 600;
-                        color: var(--navy);
-                    }
-                    .lead { margin: 0 0 14px; color: var(--muted); font-size: 17px; max-width: 62ch; }
-                    .promise {
-                        margin: 12px 0 16px;
-                        padding: 12px 14px;
-                        border-radius: 18px;
-                        border: 1px solid rgba(42,166,184,.22);
-                        background: rgba(42,166,184,.08);
-                        color: #0f3a44;
-                        font-weight: 750;
-                        max-width: 64ch;
-                    }
-                    .btn-custom {
-                        display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-                        padding: 13px 16px;
-                        border-radius: 16px;
-                        border: 1px solid var(--line);
-                        background: #fff;
-                        color: var(--navy);
-                        text-decoration: none;
-                        font-size: 14px;
-                        font-weight: 850;
-                        box-shadow: var(--shadow2);
-                        transition: .2s transform, .2s box-shadow;
-                    }
-                    .btn-custom:hover { transform: translateY(-1px); box-shadow: 0 16px 38px rgba(14,26,38,.12); }
-                    .btn-custom.primary {
-                        border: 0;
-                        color: #fff;
-                        background: var(--navy);
-                        box-shadow: 0 18px 44px rgba(14,26,38,.16);
-                    }
-                    .hint { margin-top: 14px; color: var(--muted2); font-size: 12px; display: flex; align-items: center; gap: 10px; }
-                    .card-custom {
-                        background: var(--card);
-                        border: 1px solid var(--line);
-                        border-radius: var(--radius);
-                        box-shadow: var(--shadow);
-                    }
-                    .hero-card { padding: 18px; }
-                    .micro {
-                        margin-top: 10px;
-                        padding-top: 12px;
-                        border-top: 1px solid var(--line);
-                        display: flex; gap: 10px; flex-wrap: wrap;
-                        color: var(--muted2);
-                        font-size: 12px;
-                    }
-                    .tag-custom { padding: 8px 10px; border-radius: 999px; border: 1px solid var(--line); background: #fff; box-shadow: 0 6px 16px rgba(14,26,38,.06); }
-                    .section-custom { padding: 22px 0; }
-                    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-                    .callout-custom {
-                        border-radius: 16px;
-                        padding: 12px 14px;
-                        border: 1px solid rgba(232,139,58,.28);
-                        background: rgba(232,139,58,.10);
-                        color: #6a3f10;
-                        font-size: 13px;
-                    }
-                    .value-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-                    .value { padding: 16px; border-radius: 18px; border: 1px solid rgba(11,18,32,.08); background: #fff; box-shadow: var(--shadow2); }
-                    .value .icon {
-                        width: 34px; height: 34px; border-radius: 14px;
-                        display: flex; align-items: center; justify-content: center;
-                        background: rgba(42,166,184,.10);
-                        border: 1px solid rgba(42,166,184,.20);
-                        margin-bottom: 10px;
-                        font-weight: 900;
-                        color: var(--teal);
-                    }
-                    .offer-box {
-                        display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap;
-                        padding: 18px;
-                        border-radius: var(--radius);
-                        border: 1px solid rgba(11,18,32,.10);
-                        background: linear-gradient(180deg, rgba(42,166,184,.08), rgba(255,255,255,1));
-                        box-shadow: var(--shadow);
-                    }
-                    .price {
-                        display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-                        padding: 10px 12px;
-                        border-radius: 16px;
-                        background: #fff;
-                        border: 1px solid var(--line);
-                        box-shadow: 0 8px 24px rgba(14,26,38,.08);
-                    }
-                    .guarantee {
-                        display: flex; gap: 10px; align-items: flex-start;
-                        padding: 12px 14px;
-                        border-radius: 16px;
-                        border: 1px solid rgba(16,185,129,.22);
-                        background: rgba(16,185,129,.08);
-                        color: #064e3b;
-                        font-size: 13px;
-                        max-width: 620px;
-                    }
-                    .sticky-cta {
-                        position: fixed; left: 0; right: 0; bottom: 12px; z-index: 60;
-                        padding: 0 12px;
-                    }
-                    @media (min-width: 921px) {
-                        .sticky-cta { display: none; }
-                    }
-                    @media (max-width: 920px) {
-                        .hero-grid { grid-template-columns: 1fr; }
-                        .h1-custom { font-size: 40px; }
-                        .grid-2 { grid-template-columns: 1fr; }
-                        .value-grid { grid-template-columns: 1fr; }
-                        .nav { display: none; }
-                    }
-                `}} />
+                    `
+                }} />
+
+                <nav className="topbar">
+                    <div className="custom-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBlock: '14px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div className="mark">E</div>
+                            <b style={{ fontSize: '15px', color: 'var(--navy)', letterSpacing: '-.3px' }}>RFAI · Análisis de Resultados</b>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px' }} className="nav">
+                            <button onClick={(e) => { e.preventDefault(); document.getElementById("patron")?.scrollIntoView({ behavior: "smooth" }); }} className="pill">Entender este patrón</button>
+                            <button onClick={(e) => { e.preventDefault(); document.getElementById("Checkout")?.scrollIntoView({ behavior: "smooth" }); }} className="pill cta">{isReview ? "Contactar al equipo" : "Iniciar Recuperación"}</button>
+                        </div>
+                    </div>
+                </nav>
 
                 <section className="hero" id="top">
-                    <div className="custom-container">
-                        <div className="flex items-center justify-between gap-4 mb-10 bg-white/60 p-5 rounded-[22px] border border-[var(--line)] shadow-[var(--shadow2)] backdrop-blur-md">
-                            <div className="flex items-center gap-4">
-                                <Activity className="text-[var(--teal)] w-8 h-8" />
-                                <div>
-                                    <p className="text-[10px] uppercase tracking-widest text-[var(--muted2)] font-bold mb-1">Datos Clínicos Anexos</p>
-                                    <p className="text-sm font-medium text-[var(--navy)]">IDS-E: {results.IDSE} pts • {results.interpretacion.split('.')[0]}</p>
-                                </div>
+                    <div className="custom-container hero-grid">
+                        <div>
+                            <div className="result-chip">
+                                <span className="badge-dot" style={{ background: isReview ? '#6a7a8c' : 'var(--accent)' }}></span> 
+                                {isReview ? "RESULTADO EN REVISIÓN" : "RESULTADO DEL ANÁLISIS ESTADÍSTICO"}
                             </div>
-                            <div className="hidden md:block text-right">
-                                <p className="text-[10px] uppercase tracking-widest text-[var(--muted2)] font-bold mb-1">Resumen dimensional</p>
-                                <p className="text-xs font-medium text-[var(--navy)] max-w-sm">{results.resumenDimensional}</p>
+                            
+                            <h1 className="h1-custom">{activeProfile.title}</h1>
+                            
+                            <p className="lead" dangerouslySetInnerHTML={{ __html: activeProfile.lead }} />
+                            
+                            <div className="promise-box" dangerouslySetInnerHTML={{ __html: activeProfile.promise }} />
+
+                            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '32px' }}>
+                                <button onClick={(e) => { e.preventDefault(); document.getElementById("video")?.scrollIntoView({ behavior: "smooth" }); }} className="btn-custom btn-primary">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'8px'}}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                    Ver explicación en video
+                                </button>
+                                <button onClick={(e) => { e.preventDefault(); document.getElementById("patron")?.scrollIntoView({ behavior: "smooth" }); }} className="btn-custom btn-outline">Leer reporte completo ↓</button>
                             </div>
                         </div>
 
-                        {results.perfil === "Indeterminado" ? (
-                            <div className="hero-grid mt-4" style={{ display: 'block', maxWidth: '600px', margin: '40px auto', textAlign: 'center' }}>
-                                <div className="result-chip mb-6"><span className="badge-dot" style={{ background: '#6a7a8c', boxShadow: '0 0 0 6px rgba(106,122,140,.18)' }}></span> RESULTADO EN REVISIÓN</div>
-                                <h1 className="h1-custom mb-4 leading-tight">Tu análisis está siendo procesado por el equipo clínico</h1>
-                                <p className="lead mx-auto mb-8">Tus resultados requieren de un análisis más detallado, te contactaremos para entregarte tu resultado preciso.</p>
-                                <a className="btn-custom primary text-base px-8 py-4 w-full justify-center" style={{ maxWidth: '320px', margin: '0 auto' }} href={`https://api.whatsapp.com/send/?phone=56930179724&text=Hola, acabo de terminar mi test y he recibido un resultado en revisión. Me gustaría saber más detalles.`} target="_blank" rel="noopener noreferrer">Contactar al equipo clínico</a>
+                        <aside>
+                            <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--muted)', letterSpacing: '1px', marginBottom: '16px' }}>RESUMEN DIMENSIONAL</div>
+                            
+                            <div className="data-row">
+                                <span className="data-label">Activación Emocional</span>
+                                <span className={`data-value ${lvlE.cls}`}>{lvlE.text}</span>
+                            </div>
+                            <div className="data-row">
+                                <span className="data-label">Activación Racional</span>
+                                <span className={`data-value ${lvlR.cls}`}>{lvlR.text}</span>
+                            </div>
+                            <div className="data-row">
+                                <span className="data-label">Activación Fisiológica</span>
+                                <span className={`data-value ${lvlF.cls}`}>{lvlF.text}</span>
+                            </div>
+                            <div className="data-row" style={{ marginTop: '12px', paddingTop: '12px', borderTop: '2px dashed var(--line)' }}>
+                                <span className="data-label" style={{ color: 'var(--primary)' }}>Capacidad de Regulación</span>
+                                <span className={`data-value ${lvlReg.cls}`}>{lvlReg.text}</span>
+                            </div>
+                            
+                            <div style={{ marginTop: '24px', padding: '16px', borderRadius: '12px', background: 'var(--soft)', fontSize: '13px', color: 'var(--primary)', lineHeight: 1.5 }}>
+                                <strong style={{ display: 'block', marginBottom: '4px' }}>Diagnóstico de interrelación:</strong>
+                                {results.interrelacion}
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+
+                <section className="section-custom" id="patron" style={{ background: '#fff' }}>
+                    <div className="custom-container grid-2">
+                        <div>
+                            <h2 className="h2-custom">Cómo se vive este patrón en el día a día</h2>
+                            <p style={{ color: 'var(--muted)', fontSize: '16px', lineHeight: 1.6, marginBottom: '24px' }}>
+                                Las personas con este perfil suelen reportar experiencias muy similares. No estás solo/a en esta forma de respuesta.
+                            </p>
+                            {activeProfile.quotes.map((quote, idx) => (
+                                <div key={idx} className="quote-box">
+                                    {quote.text}
+                                    <span className="quote-who">{quote.who}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="card-custom" style={{ boxShadow: 'none', background: 'var(--bg)' }}>
+                            <h3 style={{ margin: '0 0 16px', fontSize: '20px', color: 'var(--primary)' }}>Neurobiología del patrón</h3>
+                            <p style={{ color: 'var(--text)', fontSize: '16px', lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: activeProfile.translation }} />
+                        </div>
+                    </div>
+                </section>
+
+                <section className="section-custom" id="video">
+                    <div className="custom-container" style={{ textAlign: 'center' }}>
+                        <h2 className="h2-custom">Entiende la raíz de tu resultado</h2>
+                        <p style={{ color: 'var(--muted)', fontSize: '18px', maxWidth: '600px', margin: '0 auto 32px' }}>
+                            {activeProfile.videoSub}
+                        </p>
+                        <div className="video-wrapper">
+                            <iframe src={activeProfile.videoUrl} title={`Video explicativo ${activeProfile.title}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="section-custom" style={{ background: '#fff' }}>
+                    <div className="custom-container grid-2">
+                        <div>
+                            <h2 className="h2-custom">El Protocolo RFAI de 30 días</h2>
+                            <p style={{ color: 'var(--muted)', fontSize: '16px', lineHeight: 1.6, marginBottom: '32px' }}>
+                                Ruta terapéutica focalizada para reentrenar tu sistema nervioso y recuperar balance.
+                            </p>
+                            <ul className="step-list">
+                                {activeProfile.protocolSteps.map((stepDesc, idx) => (
+                                    <li key={idx} className="step-item">
+                                        <div className="step-num">{idx + 1}</div>
+                                        <div className="step-text">{stepDesc}</div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div>
+                            <div className="card-custom" style={{ background: 'var(--primary)', color: '#fff', border: 0 }}>
+                                <h3 style={{ margin: '0 0 16px', fontSize: '24px', letterSpacing: '-.5px' }}>{activeProfile.benefitsTitle}</h3>
+                                <p style={{ fontSize: '16px', lineHeight: 1.6, opacity: .9, marginBottom: '24px' }}>
+                                    {activeProfile.benefitsSub}
+                                </p>
+                                <hr style={{ border: 0, borderTop: '1px solid rgba(255,255,255,.2)', margin: '24px 0' }} />
+                                <p style={{ fontSize: '15px', lineHeight: 1.5, opacity: .8 }}>
+                                    {activeProfile.closingP1}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="section-custom" id="Checkout">
+                    <div className="custom-container">
+                        {!isReview ? (
+                            <div className="price-box">
+                                <div style={{ display: 'inline-block', padding: '6px 12px', background: 'var(--ok)', color: '#047857', borderRadius: '99px', fontSize: '13px', fontWeight: 800, letterSpacing: '1px', marginBottom: '24px' }}>
+                                    PROGRAMA COMPLETO DISPONIBLE
+                                </div>
+                                <h2 className="h2-custom" style={{ fontSize: '36px', marginBottom: '8px' }}>Tratamiento RFAI</h2>
+                                <p style={{ color: 'var(--muted)', fontSize: '16px', marginBottom: '8px' }}>Tu evaluación inicial y programa completo de recuperación.</p>
+                                
+                                <div style={{ fontSize: '56px', fontWeight: 900, color: 'var(--primary)', letterSpacing: '-2px', margin: '24px 0 8px' }}>
+                                    $290.000<span style={{ fontSize: '18px', color: 'var(--muted)', fontWeight: 600, letterSpacing: '0' }}> CLP</span>
+                                </div>
+                                <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '32px' }}>Pago único y seguro vía MercadoPago.</p>
+                                
+                                <a href={activeProfile.paymentUrl} className="btn-custom btn-primary" style={{ width: '100%', fontSize: '18px', padding: '20px' }}>
+                                    Iniciar Programa Ahora
+                                </a>
+                                
+                                <p style={{ marginTop: '20px', fontSize: '13px', color: 'var(--muted)' }}>
+                                    ¿Tienes dudas? <a href={`https://api.whatsapp.com/send/?phone=56930179724&text=${encodeURIComponent('Hola, tengo dudas sobre el protocolo RFAI para el perfil: ' + activeProfile.title)}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'none' }}>Hablemos por WhatsApp</a>
+                                </p>
                             </div>
                         ) : (
-                            <div className="hero-grid mt-4">
-                                <div>
-                                    <div className="result-chip"><span className="badge-dot"></span> RESUMEN DEL DIAGNÓSTICO ESTADÍSTICO PARA {userInfo.name.split(' ')[0].toUpperCase()}</div>
-                                    <h1 className="h1-custom">{activeProfile.subtitle}</h1>
-                                    <p className="lead">{activeProfile.lead}</p>
-                                    <div className="promise">
-                                        <b>Cambia este resultado en tu vida</b> con un protocolo guiado de 30 días para reprogramar la respuesta biológica.
-                                    </div>
-                                    <div className="flex gap-[10px] flex-wrap items-center mt-6">
-                                        <button className="btn-custom primary cursor-pointer" onClick={(e) => { e.preventDefault(); document.getElementById('transformar')?.scrollIntoView({ behavior: 'smooth' }); }}>Avanzar e Ingresar al Programa (↓)</button>
-                                        <button className="btn-custom cursor-pointer" onClick={(e) => { e.preventDefault(); document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' }); }}>Ver video de tu diagnóstico (2 min)</button>
-                                    </div>
-                                    <div className="hint mt-8">
-                                        <div className="w-[32px] h-[32px] rounded-full border border-[var(--line)] bg-white flex items-center justify-center shadow-[var(--shadow2)] text-lg">↓</div>
-                                        <span className="text-sm">Desliza para entender el patrón y ver tu evaluación detallada.</span>
-                                    </div>
+                            <div className="price-box" style={{ background: '#f8fafc', borderColor: '#cbd5e1' }}>
+                                <div style={{ display: 'inline-block', padding: '6px 12px', background: '#e2e8f0', color: '#475569', borderRadius: '99px', fontSize: '13px', fontWeight: 800, letterSpacing: '1px', marginBottom: '24px' }}>
+                                    EVALUACIÓN REQUERIDA
                                 </div>
-                                <aside className="card-custom hero-card" aria-label="Validación rápida">
-                                    <b className="block text-[12px] text-[var(--muted2)] tracking-[.14em] uppercase mb-[10px]">Lo principal de tu resultado</b>
-                                    <h3 className="m-0 mb-[10px] text-[18px] text-[var(--navy)] font-serif">Esta no es tu "Personalidad".</h3>
-                                    <ul className="m-0 pl-[18px] text-[var(--muted)] text-[14px]">
-                                        <li className="my-[8px]">Al somatizar de esta forma nos indica un <b>circuito aprendido</b> del sistema nervioso intentando protegerte de la carga acumulada.</li>
-                                        <li className="my-[8px]">Puede estar activándose incluso cuando no hay ni peligro ni tensión aparente frente a ti (ansiedad flotante).</li>
-                                        <li className="my-[8px]">Toda esta sensación puede entrenarse para recuperar el control utilizando neuroplasticidad comprobada.</li>
-                                    </ul>
-                                    <div className="micro">
-                                        <div className="tag-custom">Análisis de Reacciones</div>
-                                        <div className="tag-custom">Medición Clínica Real</div>
-                                        <div className="tag-custom">Ruta Terapéutica</div>
-                                    </div>
-                                </aside>
+                                <h2 className="h2-custom" style={{ fontSize: '32px' }}>Análisis a Medida</h2>
+                                <p style={{ color: 'var(--muted)', fontSize: '16px', marginBottom: '32px' }}>Tu evaluación inicial y programa de recuperación deben ser evaluados por nuestro equipo clínico.</p>
+                                
+                                <a href={`https://api.whatsapp.com/send/?phone=56930179724&text=Hola, acabo de terminar mi test y he recibido un resultado en revisión. Me gustaría saber más detalles.`} target="_blank" rel="noopener noreferrer" className="btn-custom btn-primary" style={{ width: '100%', fontSize: '18px', padding: '20px', background: '#10b981', boxShadow: '0 12px 30px rgba(16,185,129,.25)' }}>
+                                    Contactar al equipo por WhatsApp
+                                </a>
                             </div>
                         )}
                     </div>
                 </section>
-
-                {results.perfil !== "Indeterminado" && (
-                    <>
-                        <section className="section-custom" id="transformar">
-                            <div className="custom-container grid-2">
-                                <div className="card-custom p-[22px]">
-                                    <h2 className="m-0 mb-[12px] text-[24px] tracking-[-.2px] text-[var(--navy)] font-serif">Qué significa a nivel neurobiológico</h2>
-                                    <p className="m-0 mb-[16px] text-[var(--muted)] leading-relaxed">{activeProfile.definition}</p>
-                                    <div className="callout-custom">El objetivo del tratamiento no es anular tus capacidades, sino restaurar un equilibrio sólido y devolverte tu salud orgánica para no depender farmacológicamente.</div>
-                                </div>
-                                <div className="card-custom p-[22px]">
-                                    <h2 className="m-0 mb-[12px] text-[24px] tracking-[-.2px] text-[var(--navy)] font-serif">Por qué se sostiene el {activeProfile.subtitle} en ti</h2>
-                                    <p className="m-0 mb-[16px] text-[var(--muted)] leading-relaxed" dangerouslySetInnerHTML={{ __html: activeProfile.origin.replace(/'([^']+)'/g, "<b>'$1'</b>") }}></p>
-                                    <p className="m-0 mb-[4px] text-[12px] uppercase font-bold text-[var(--teal)]">SÍNTESIS ESPECÍFICA DE TUS VARIABLES:</p>
-                                    <p className="m-0 text-[14px] text-[var(--navy)]">{results.interrelacion} ({results.ITA} de carga frente a {results.Re} de recursos)</p>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section className="section-custom" id="video">
-                            <div className="custom-container">
-                                <div className="card-custom p-[24px]">
-                                    <h2 className="m-0 mb-[10px] text-[26px] tracking-[-.2px] text-[var(--navy)] font-serif text-center">Entiende tu diagnóstico con este video detallado</h2>
-                                    <p className="m-0 mb-[24px] text-[var(--muted)] text-center max-w-2xl mx-auto">Reproduce tu sesión para entender exactamente cómo tu cerebro aprendió este mecanismo y por qué nuestra reprogramación clínica apunta al origen del problema.</p>
-                                    <div className="max-w-4xl mx-auto aspect-video rounded-[22px] overflow-hidden border border-[rgba(11,18,32,.12)] shadow-xl bg-black relative">
-                                        <iframe src={activeProfile.video} title={`Video perfil ${activeProfile.subtitle}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="w-full h-full border-0 absolute top-0 left-0"></iframe>
-                                    </div>
-                                    <div className="flex gap-[16px] flex-wrap items-center justify-center mt-[24px]">
-                                        <a className="btn-custom primary text-base px-8 py-4" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Proceder a la Solución de 30 días</a>
-                                        <a className="btn-custom text-base px-8 py-4" href={`https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${wpMsg}`} target="_blank" rel="noopener noreferrer">Ver contenido de la solución paso a paso</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section className="section-custom bg-white/40" id="incluye">
-                            <div className="custom-container">
-                                <div className="card-custom p-[24px] md:p-[32px]">
-                                    <h2 className="m-0 mb-[10px] text-[28px] tracking-[-.2px] text-[var(--navy)] font-serif">Cómo transicionarlo (Protocolo RFAI • 30 días)</h2>
-                                    <p className="m-0 mb-[24px] text-[var(--muted)] text-[16px] max-w-3xl">Un protocolo estricto clínico-práctico totalmente fundado en tu neuroplasticidad para reorganizar tu respuesta inconsciente. El programa no intentará forzar tu memoria, <b>te guiará para asentar respuestas biológicas de paz interior duradera</b>.</p>
-
-                                    <div className="value-grid">
-                                        <div className="value hover:-translate-y-1 transition-transform">
-                                            <div className="icon">1</div>
-                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Auditoría Inmersiva Inicial</b>
-                                            <p className="m-0 text-[var(--muted)] text-[14px]">Sesión exclusiva donde evaluamos tu estado base, marcaciones y gatillantes emocionales para trazar tu viaje.</p>
-                                        </div>
-                                        <div className="value hover:-translate-y-1 transition-transform">
-                                            <div className="icon">2</div>
-                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Hipnosis Clínica Especializada</b>
-                                            <p className="m-0 text-[var(--muted)] text-[14px]">Audios y sugestión subliminal para acceder a capas profundas y reescribir progresivamente tu exigencia metabólica.</p>
-                                        </div>
-                                        <div className="value hover:-translate-y-1 transition-transform">
-                                            <div className="icon">3</div>
-                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Trackeo e-Integrativo</b>
-                                            <p className="m-0 text-[var(--muted)] text-[14px]">Cuestionarios o cuadernos semanales donde medimos empíricamente cómo el cambio está asentándose en ti.</p>
-                                        </div>
-                                        <div className="value hover:-translate-y-1 transition-transform">
-                                            <div className="icon">4</div>
-                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Acompañamiento Permanente</b>
-                                            <p className="m-0 text-[var(--muted)] text-[14px]">Anotaciones y revisiones periódicas que validan que la reprogramación neuronal no sea por azar, sino un hábito.</p>
-                                        </div>
-                                        <div className="value hover:-translate-y-1 transition-transform">
-                                            <div className="icon">5</div>
-                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Auditoría Psíquica de Cierre</b>
-                                            <p className="m-0 text-[var(--muted)] text-[14px]">Test Final y Evaluación para observar y confirmar tu nuevo balance interno de variables y resultados consolidables.</p>
-                                        </div>
-                                        <div className="value hover:-translate-y-1 transition-transform">
-                                            <div className="icon">+</div>
-                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Audios de Blindaje (SOS)</b>
-                                            <p className="m-0 text-[var(--muted)] text-[14px]">Kit de moduladores extra para situaciones sorpresivas de alta sobrecarga emocional y resiliencia a largo plazo.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section className="section-custom mb-20" id="comprar">
-                            <div className="custom-container">
-                                <div className="offer-box p-[24px] md:p-[32px]">
-                                    <div className="max-w-xl">
-                                        <h2 className="m-0 mb-[12px] text-[32px] md:text-[40px] tracking-[-1px] text-[var(--navy)] font-serif leading-tight">Cambia todo el enfoque de tu vida en los próximos 30 días</h2>
-                                        <p className="m-0 mb-[24px] text-[var(--muted)] text-base">
-                                            Si comprendes de dónde viene tu desgaste pero pareces seguir reaccionando en automático con miedo o desgaste cada día, nuestro protocolo clínico integral (RFAI) modificará esta inercia protegiendo tu salud.
-                                        </p>
-                                        <div className="guarantee">
-                                            <div className="font-black text-xl">✔</div>
-                                            <div className="text-base">
-                                                <b>Proceso guiado, no material en frío</b>. Obtienes intervenciones de hipnosis real y revisiones de equipo, una garantía para una transformación verificable.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="w-full md:w-auto mt-8 md:mt-0 md:min-w-[320px]">
-                                        <div className="price mb-2">
-                                            <div className="text-[36px] md:text-[48px] font-black text-[var(--navy)] tracking-tighter">$290.000</div>
-                                        </div>
-                                        <div className="text-[13px] text-[var(--muted2)] mb-8 font-medium">Tarifa única total por lanzamiento del Método Integro Completo</div>
-                                        <div className="flex flex-col gap-[16px]">
-                                            <a className="btn-custom primary text-lg py-5 shadow-[0_22px_50px_rgba(14,26,38,.20)] hover:-translate-y-1" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">🛒 COMPRAR ACCESO ONLINE AHORA</a>
-                                            <a className="btn-custom border-2 border-[#25D366] text-[#128C7E] text-base py-4 hover:bg-[#25D366] hover:text-white" href={`https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${wpMsg}`} target="_blank" rel="noopener noreferrer">📲 Consultar dudas por WhatsApp</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </>
-                )}
-
-                <footer className="pt-[32px] pb-[90px] md:pb-[70px] border-t border-[var(--line)] text-[var(--muted2)] text-[12px] md:text-[14px]">
-                    <div className="custom-container text-center text-slate-400">
-                        © Centro Clínico Equilibrar • RFAI — Reprogramación Focalizada de Alto Impacto • Enfoque Clínico Especializado.<br />La información arrojada y expuesta en este sitio es informativa y no reemplaza diagnóstico médico oficial.
-                    </div>
+                
+                <footer style={{ padding: '40px 20px', textAlign: 'center', borderTop: '1px solid var(--line)', color: 'var(--muted)', fontSize: '14px' }}>
+                    © Centro Clínico Equilibrar • RFAI — Reprogramación Focalizada de Alto Impacto.<br/>
+                    La información arrojada y expuesta en este sitio es informativa y no reemplaza diagnóstico médico oficial.
                 </footer>
-
-                {results.perfil !== "Indeterminado" && (
-                    <div className="sticky-cta">
-                        <div className="max-w-[1120px] mx-auto bg-[rgba(255,255,255,.9)] backdrop-blur-[16px] border border-[var(--line)] rounded-[20px] shadow-[0_-10px_40px_rgba(14,26,38,.12)] p-[12px] flex items-center justify-between gap-[12px]">
-                            <div>
-                                <b className="text-[14px] text-[var(--navy)] font-bold">Resultado: {activeProfile.subtitle}</b>
-                                <span className="block text-[12px] text-[var(--muted2)] font-medium">Tratamiento Clínico RFAI 30 días</span>
-                            </div>
-                            <a className="btn-custom primary py-[12px] px-[20px] rounded-[16px] text-sm" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Comprar Ahora ($290k)</a>
-                        </div>
-                    </div>
-                )}
-
             </div>
         );
     }
+
 
     // Vista de Preguntas
     const getStepContent = () => {
