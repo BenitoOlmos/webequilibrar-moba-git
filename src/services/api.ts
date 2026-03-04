@@ -1,4 +1,4 @@
-import { ApiResponse, Program, Service } from '../../types';
+import { ApiResponse, Program, Service } from '../types';
 import { fallbackPrograms, fallbackServices } from '../data/fallback';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';

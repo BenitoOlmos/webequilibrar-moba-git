@@ -1,4 +1,4 @@
-import { Program, Service, Author } from '../../types';
+import { Program, Service, Author } from '../types';
 import claudioReyesImg from '../assets/images/claudio-reyes.jpg';
 
 const claudioReyes: Author = {

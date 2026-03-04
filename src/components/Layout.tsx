@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, MessageCircle, HeartPulse, Building2 } from 'lucide-react';
-import logo from '../src/assets/images/logo.png';
+import logo from '../assets/images/logo.png';
 
 interface LayoutProps {
   children: React.ReactNode;

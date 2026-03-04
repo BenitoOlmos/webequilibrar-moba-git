@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './HypnosisPlayer.css';
-import logo from '../src/assets/images/logo.png';
-import audioFile from '../src/assets/audio/Hipnosis RFAI Reactivo FINAL.mp3';
+import logo from '../assets/images/logo.png';
+import audioFile from '../assets/audio/hipnosis RFAI transversal FINAL.mp3';
 
-const AudioReactividadPlayer: React.FC = () => {
+const AudioReprogramacionPlayer: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleGuia = () => {
@@ -16,9 +16,9 @@ const AudioReactividadPlayer: React.FC = () => {
                 <div className="reproductor-hipnosis">
                     <img src={logo} alt="Logo Clínica Equilibrar" className="reproductor-logo" />
 
-                    <h2>Hipnosis para la Reprogramación de la reactividad emocional</h2>
+                    <h2>Hipnosis para la Reprogramación desde la Consciencia</h2>
                     <p className="text-sm uppercase tracking-widest font-bold text-brand-primary mt-2">
-                        AUDIO Y GUÍA CREADA IMPLEMENTAR LA CAPACIDAD DE REGULAR LA EXPERIENCIA
+                        AUDIO Y GUÍA CREADA IMPLEMENTAR LA CAPACIDAD DE OBSERVAR LA EXPERIENCIA
                     </p>
 
                     <audio controls controlsList="nodownload" className="mt-8">
@@ -42,11 +42,11 @@ const AudioReactividadPlayer: React.FC = () => {
                         <h3>Consideraciones previas</h3>
 
                         <div className="guia-seccion">
-                            Esta sesión de <strong>hipnosis clínica y PNL</strong> está diseñada para ampliar el espacio entre el estímulo y la respuesta, fortaleciendo tu capacidad de pausa consciente.
+                            Esta sesión de <strong>hipnosis clínica y PNL</strong> está diseñada para fortalecer la capacidad de auto observación, previo a la regulación.
                         </div>
 
                         <div className="guia-seccion">
-                            Este proceso no busca eliminar tu rapidez mental ni tu capacidad de reacción, sino transformar la urgencia automática en respuesta elegida. No pierdes el control en ningún momento; se trata de un estado de relajación profunda que permite que tu sistema aprenda a regular velocidad sin perder eficacia. Aquí no se frena la mente; se introduce una pausa que amplía tus posibilidades.
+                            Este proceso no busca eliminar tu forma de funcionar, sino que transformar la manera interna en que funcionas para darte mayor capacidad de respuesta. En el audio no pierdes el control en ningún momento; se trata de un estado de relajación profunda y atención focalizada que nos ayuda a reforzar patrones nuevos de funcionamiento en el inconsciente.
                         </div>
 
                         <h4>Recomendaciones de uso:</h4>
@@ -63,4 +63,4 @@ const AudioReactividadPlayer: React.FC = () => {
     );
 };
 
-export default AudioReactividadPlayer;
+export default AudioReprogramacionPlayer;

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import './HypnosisPlayer.css'; // Importing shared styles
-import logo from '../src/assets/images/logo.png';
-import audioFile from '../src/assets/audio/hipnosis-culpa.mp3';
+import './HypnosisPlayer.css';
+import logo from '../assets/images/logo.png';
+import audioFile from '../assets/audio/Hipnosis RFAI Reactivo FINAL.mp3';
 
-const HypnosisCulpaPlayer: React.FC = () => {
+const AudioReactividadPlayer: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleGuia = () => {
@@ -16,17 +16,19 @@ const HypnosisCulpaPlayer: React.FC = () => {
                 <div className="reproductor-hipnosis">
                     <img src={logo} alt="Logo Clínica Equilibrar" className="reproductor-logo" />
 
-                    <h2>Hipnosis para la Reprogramación</h2>
-                    <p>Audio y Guía creada para reprogramar las emociones</p>
+                    <h2>Hipnosis para la Reprogramación de la reactividad emocional</h2>
+                    <p className="text-sm uppercase tracking-widest font-bold text-brand-primary mt-2">
+                        AUDIO Y GUÍA CREADA IMPLEMENTAR LA CAPACIDAD DE REGULAR LA EXPERIENCIA
+                    </p>
 
-                    <audio controls controlsList="nodownload">
+                    <audio controls controlsList="nodownload" className="mt-8">
                         <source src={audioFile} type="audio/mpeg" />
                         Tu navegador no soporta el elemento de audio.
                     </audio>
 
                     <div className="reproductor-footer">
                         <span className="pulse-icon"></span>
-                        ENCUENTRA TU EQUILIBRIO
+                        FORTALECE TU INTERIOR
                         <span className="pulse-icon"></span>
                     </div>
                 </div>
@@ -37,14 +39,14 @@ const HypnosisCulpaPlayer: React.FC = () => {
                     </div>
 
                     <div className={`guia-contenido ${isOpen ? 'guia-abierta' : ''}`}>
-                        <h3>Guía de Acompañamiento Terapéutico</h3>
+                        <h3>Consideraciones previas</h3>
 
                         <div className="guia-seccion">
-                            Esta sesión de <strong>hipnosis clínica y PNL</strong> está diseñada para diferenciar la culpa adaptativa (la que nos ayuda a reparar errores) de la <strong>culpa no adaptativa</strong>, aquella que se manifiesta como un autojuicio constante que erosiona la autoestima.
+                            Esta sesión de <strong>hipnosis clínica y PNL</strong> está diseñada para ampliar el espacio entre el estímulo y la respuesta, fortaleciendo tu capacidad de pausa consciente.
                         </div>
 
                         <div className="guia-seccion">
-                            Este proceso no busca eliminar tu responsabilidad, sino transformar la violencia interna en una <strong>autorregulación amable y realista</strong>. No pierdes el control en ningún momento; se trata de un estado de relajación profunda y atención focalizada.
+                            Este proceso no busca eliminar tu rapidez mental ni tu capacidad de reacción, sino transformar la urgencia automática en respuesta elegida. No pierdes el control en ningún momento; se trata de un estado de relajación profunda que permite que tu sistema aprenda a regular velocidad sin perder eficacia. Aquí no se frena la mente; se introduce una pausa que amplía tus posibilidades.
                         </div>
 
                         <h4>Recomendaciones de uso:</h4>
@@ -54,10 +56,6 @@ const HypnosisCulpaPlayer: React.FC = () => {
                             <li><strong>No utilices este audio mientras conduces</strong> o realizas actividades que requieran atención externa.</li>
                             <li>Permite que la experiencia fluya sin exigirte "hacerlo bien".</li>
                         </ul>
-
-                        <div className="guia-seccion" style={{ fontStyle: 'italic', borderTop: '1px solid #eee', paddingTop: '20px', marginTop: '30px', fontSize: '14px' }}>
-                            "Reducir la culpa no adaptativa no significa dejar de hacerse cargo, sino aprender a hacerlo sin violencia interna."
-                        </div>
                     </div>
                 </div>
             </div>
@@ -65,4 +63,4 @@ const HypnosisCulpaPlayer: React.FC = () => {
     );
 };
 
-export default HypnosisCulpaPlayer;
+export default AudioReactividadPlayer;

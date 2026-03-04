@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle2, MessageCircle } from 'lucide-react';
 import { useParams, Link } from 'react-router-dom';
-import { api } from '../src/services/api';
+import { api } from '../services/api';
 import { Service } from '../types';
 
-import logo from '../src/assets/images/logo.png';
-import serviceDetailPsychiatry from '../src/assets/images/service-detail-psychiatry.jpg';
-import serviceDetailPsychology from '../src/assets/images/service-detail-psychology.jpg';
+import logo from '../assets/images/logo.png';
+import serviceDetailPsychiatry from '../assets/images/service-detail-psychiatry.jpg';
+import serviceDetailPsychology from '../assets/images/service-detail-psychology.jpg';
 
 interface ServiceDetailProps {
   slug?: string;

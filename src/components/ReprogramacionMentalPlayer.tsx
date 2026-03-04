@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './HypnosisPlayer.css'; // Reusing the shared CSS
-import logo from '../src/assets/images/logo.png';
-import audioFile from '../src/assets/audio/Reprogramacion-mental.mp3';
+import logo from '../assets/images/logo.png';
+import audioFile from '../assets/audio/Reprogramacion-mental.mp3';
 
 const ReprogramacionMentalPlayer: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);

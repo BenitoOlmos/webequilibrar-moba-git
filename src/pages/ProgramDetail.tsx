@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
-import { api } from '../src/services/api';
+import { api } from '../services/api';
 import { Program } from '../types';
 
-import logo from '../src/assets/images/logo.png';
+import logo from '../assets/images/logo.png';
 // Import images to resolve paths if they are local
-import claudioReyes from '../src/assets/images/claudio-reyes.jpg';
+import claudioReyes from '../assets/images/claudio-reyes.jpg';
 
 interface ProgramDetailProps {
   slug?: string;

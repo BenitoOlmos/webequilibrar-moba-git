@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Brain, Heart, ShieldCheck, Sparkles, Quote, Fingerprint, Microscope, Users } from 'lucide-react';
 
-import heroNeuroscience from '../src/assets/images/hero-neuroscience.png';
-import heroClinical from '../src/assets/images/hero-clinical.jpg';
-import heroInterior from '../src/assets/images/hero-interior.jpg';
-import aboutClinicMain from '../src/assets/images/about-clinic-main.jpg';
-import aboutClinicDetail from '../src/assets/images/about-clinic-detail.jpg';
-import servicePsychiatry from '../src/assets/images/service-psychiatry.jpg';
-import servicePsychology from '../src/assets/images/service-psychology.png';
+import heroNeuroscience from '../assets/images/hero-neuroscience.png';
+import heroClinical from '../assets/images/hero-clinical.jpg';
+import heroInterior from '../assets/images/hero-interior.jpg';
+import aboutClinicMain from '../assets/images/about-clinic-main.jpg';
+import aboutClinicDetail from '../assets/images/about-clinic-detail.jpg';
+import servicePsychiatry from '../assets/images/service-psychiatry.jpg';
+import servicePsychology from '../assets/images/service-psychology.png';
 
 // New images
-import heroImage1 from '../src/assets/images/1.png';
-import heroImage5 from '../src/assets/images/5.png';
-import heroImage7 from '../src/assets/images/7.png';
+import heroImage1 from '../assets/images/1.png';
+import heroImage5 from '../assets/images/5.png';
+import heroImage7 from '../assets/images/7.png';
 
 const slides = [
    {
