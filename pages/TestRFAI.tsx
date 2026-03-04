@@ -564,7 +564,7 @@ const TestRFAI: React.FC = () => {
                                     <b>Cambia este resultado en tu vida</b> con un protocolo guiado de 30 días para reprogramar la respuesta biológica.
                                 </div>
                                 <div className="flex gap-[10px] flex-wrap items-center mt-6">
-                                    <a className="btn-custom primary" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Avanzar e Ingresar al Programa (↓)</a>
+                                    <button className="btn-custom primary cursor-pointer" onClick={(e) => { e.preventDefault(); document.getElementById('transformar')?.scrollIntoView({ behavior: 'smooth' }); }}>Avanzar e Ingresar al Programa (↓)</button>
                                     <button className="btn-custom cursor-pointer" onClick={(e) => { e.preventDefault(); document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' }); }}>Ver video de tu diagnóstico (2 min)</button>
                                 </div>
                                 <div className="hint mt-8">
@@ -681,7 +681,7 @@ const TestRFAI: React.FC = () => {
                             </div>
                             <div className="w-full md:w-auto mt-8 md:mt-0 md:min-w-[320px]">
                                 <div className="price mb-2">
-                                    <div className="text-[36px] md:text-[48px] font-black text-[var(--navy)] tracking-tighter">$250.000</div>
+                                    <div className="text-[36px] md:text-[48px] font-black text-[var(--navy)] tracking-tighter">$290.000</div>
                                 </div>
                                 <div className="text-[13px] text-[var(--muted2)] mb-8 font-medium">Tarifa única total por lanzamiento del Método Integro Completo</div>
                                 <div className="flex flex-col gap-[16px]">
@@ -705,7 +705,7 @@ const TestRFAI: React.FC = () => {
                             <b className="text-[14px] text-[var(--navy)] font-bold">Resultado: {activeProfile.subtitle}</b>
                             <span className="block text-[12px] text-[var(--muted2)] font-medium">Tratamiento Clínico RFAI 30 días</span>
                         </div>
-                        <a className="btn-custom primary py-[12px] px-[20px] rounded-[16px] text-sm" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Comprar Ahora ($250k)</a>
+                        <a className="btn-custom primary py-[12px] px-[20px] rounded-[16px] text-sm" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Comprar Ahora ($290k)</a>
                     </div>
                 </div>
 
