@@ -71,6 +71,7 @@ interface ResultsType {
     aeText: string;
     rText: string;
     interrelacion: string;
+    resumenDimensional: string;
 }
 
 const TestRFAI: React.FC = () => {
@@ -153,20 +154,23 @@ const TestRFAI: React.FC = () => {
         else if (IDSE >= 20 && IDSE <= 49) interpretacion = "Desbalance moderado. Consumo excesivo de recursos por sobre-activación de las bases biológicas.";
         else interpretacion = "Desbalance alto. Consumo excesivo prolongado que puede llevar a síndromes tensionales, disregulación anímica o agotamiento funcional.";
 
-        let perfil = "Subtipo funcional";
+        let perfil = "Indeterminado";
         if (ITA <= 27) {
             if (R >= 10) perfil = "Hiper Regulado";
             else perfil = "Inhibido";
         } else if (ITA >= 28 && ITA <= 54) {
             if (R >= 19) perfil = "Sobre Adaptado";
-            else perfil = "Posible Sobre adaptación o hiperreactividad evaluar síntomas de auto control percibido y estrés";
+            else perfil = "Indeterminado";
         } else if (ITA >= 55) {
             if (R <= 9) perfil = "Desbordado";
             else if (R >= 10 && R <= 18) perfil = "Hiper Reactivo";
             else if (R >= 19) {
-                if (AM >= 19 && AE >= 19) perfil = "Funcionalidad sostenida con sobre pensamiento y desbordes emocionales";
-                else perfil = "Regulación funcional bajo entorno de estrés sostenido";
+                perfil = "Indeterminado";
             }
+        }
+
+        if (perfil === "Indeterminado") {
+            console.warn("RFAI indeterminado", { AF, AM, AE, R, ITA, IDSE });
         }
 
         let interrelacion = "Perfil de Estabilidad Funcional.";
@@ -216,7 +220,15 @@ const TestRFAI: React.FC = () => {
         const aeText = getActvText(AE, 'AE');
         const rText = getRegText(R, ITA, IDSE, ITA <= 27 || (AF <= 9 && AM <= 9 && AE <= 9));
 
-        return { AF, AM, AE, R, ITA, Re, IDSE, interpretacion, perfil, afText, amText, aeText, rText, interrelacion };
+        const level28 = (score: number) => {
+            if (score <= 9) return "bajo";
+            if (score <= 18) return "medio";
+            return "alto";
+        };
+
+        const resumenDimensional = `Fisiológicamente ${level28(AF)} · Emocionalmente ${level28(AE)} · Racionalmente ${level28(AM)} · Regulación ${level28(R)}`;
+
+        return { AF, AM, AE, R, ITA, Re, IDSE, interpretacion, perfil, afText, amText, aeText, rText, interrelacion, resumenDimensional };
     };
 
     const handleSubmit = async () => {
@@ -241,6 +253,7 @@ const TestRFAI: React.FC = () => {
         formData.append("IDSE", calculatedResults.IDSE.toString());
         formData.append("interpretacion", calculatedResults.interpretacion);
         formData.append("perfil", `${calculatedResults.perfil} | ${calculatedResults.interrelacion}`);
+        formData.append("resumen_dimensional", calculatedResults.resumenDimensional);
 
         try {
             await fetch(GOOGLE_SCRIPT_URL, {
@@ -550,148 +563,161 @@ const TestRFAI: React.FC = () => {
                                 </div>
                             </div>
                             <div className="hidden md:block text-right">
-                                <p className="text-[10px] uppercase tracking-widest text-[var(--muted2)] font-bold mb-1">Interrelación Analizada</p>
-                                <p className="text-xs font-medium text-[var(--navy)] max-w-sm">{results.interrelacion}</p>
+                                <p className="text-[10px] uppercase tracking-widest text-[var(--muted2)] font-bold mb-1">Resumen dimensional</p>
+                                <p className="text-xs font-medium text-[var(--navy)] max-w-sm">{results.resumenDimensional}</p>
                             </div>
                         </div>
 
-                        <div className="hero-grid mt-4">
-                            <div>
-                                <div className="result-chip"><span className="badge-dot"></span> RESUMEN DEL DIAGNÓSTICO ESTADÍSTICO PARA {userInfo.name.split(' ')[0].toUpperCase()}</div>
-                                <h1 className="h1-custom">{activeProfile.subtitle}</h1>
-                                <p className="lead">{activeProfile.lead}</p>
-                                <div className="promise">
-                                    <b>Cambia este resultado en tu vida</b> con un protocolo guiado de 30 días para reprogramar la respuesta biológica.
-                                </div>
-                                <div className="flex gap-[10px] flex-wrap items-center mt-6">
-                                    <button className="btn-custom primary cursor-pointer" onClick={(e) => { e.preventDefault(); document.getElementById('transformar')?.scrollIntoView({ behavior: 'smooth' }); }}>Avanzar e Ingresar al Programa (↓)</button>
-                                    <button className="btn-custom cursor-pointer" onClick={(e) => { e.preventDefault(); document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' }); }}>Ver video de tu diagnóstico (2 min)</button>
-                                </div>
-                                <div className="hint mt-8">
-                                    <div className="w-[32px] h-[32px] rounded-full border border-[var(--line)] bg-white flex items-center justify-center shadow-[var(--shadow2)] text-lg">↓</div>
-                                    <span className="text-sm">Desliza para entender el patrón y ver tu evaluación detallada.</span>
-                                </div>
+                        {results.perfil === "Indeterminado" ? (
+                            <div className="hero-grid mt-4" style={{ display: 'block', maxWidth: '600px', margin: '40px auto', textAlign: 'center' }}>
+                                <div className="result-chip mb-6"><span className="badge-dot" style={{ background: '#6a7a8c', boxShadow: '0 0 0 6px rgba(106,122,140,.18)' }}></span> RESULTADO EN REVISIÓN</div>
+                                <h1 className="h1-custom mb-4 leading-tight">Tu análisis está siendo procesado por el equipo clínico</h1>
+                                <p className="lead mx-auto mb-8">Tus resultados requieren de un análisis más detallado, te contactaremos para entregarte tu resultado preciso.</p>
+                                <a className="btn-custom primary text-base px-8 py-4 w-full justify-center" style={{ maxWidth: '320px', margin: '0 auto' }} href={`https://api.whatsapp.com/send/?phone=56930179724&text=Hola, acabo de terminar mi test y he recibido un resultado en revisión. Me gustaría saber más detalles.`} target="_blank" rel="noopener noreferrer">Contactar al equipo clínico</a>
                             </div>
-                            <aside className="card-custom hero-card" aria-label="Validación rápida">
-                                <b className="block text-[12px] text-[var(--muted2)] tracking-[.14em] uppercase mb-[10px]">Lo principal de tu resultado</b>
-                                <h3 className="m-0 mb-[10px] text-[18px] text-[var(--navy)] font-serif">Esta no es tu "Personalidad".</h3>
-                                <ul className="m-0 pl-[18px] text-[var(--muted)] text-[14px]">
-                                    <li className="my-[8px]">Al somatizar de esta forma nos indica un <b>circuito aprendido</b> del sistema nervioso intentando protegerte de la carga acumulada.</li>
-                                    <li className="my-[8px]">Puede estar activándose incluso cuando no hay ni peligro ni tensión aparente frente a ti (ansiedad flotante).</li>
-                                    <li className="my-[8px]">Toda esta sensación puede entrenarse para recuperar el control utilizando neuroplasticidad comprobada.</li>
-                                </ul>
-                                <div className="micro">
-                                    <div className="tag-custom">Análisis de Reacciones</div>
-                                    <div className="tag-custom">Medición Clínica Real</div>
-                                    <div className="tag-custom">Ruta Terapéutica</div>
+                        ) : (
+                            <div className="hero-grid mt-4">
+                                <div>
+                                    <div className="result-chip"><span className="badge-dot"></span> RESUMEN DEL DIAGNÓSTICO ESTADÍSTICO PARA {userInfo.name.split(' ')[0].toUpperCase()}</div>
+                                    <h1 className="h1-custom">{activeProfile.subtitle}</h1>
+                                    <p className="lead">{activeProfile.lead}</p>
+                                    <div className="promise">
+                                        <b>Cambia este resultado en tu vida</b> con un protocolo guiado de 30 días para reprogramar la respuesta biológica.
+                                    </div>
+                                    <div className="flex gap-[10px] flex-wrap items-center mt-6">
+                                        <button className="btn-custom primary cursor-pointer" onClick={(e) => { e.preventDefault(); document.getElementById('transformar')?.scrollIntoView({ behavior: 'smooth' }); }}>Avanzar e Ingresar al Programa (↓)</button>
+                                        <button className="btn-custom cursor-pointer" onClick={(e) => { e.preventDefault(); document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' }); }}>Ver video de tu diagnóstico (2 min)</button>
+                                    </div>
+                                    <div className="hint mt-8">
+                                        <div className="w-[32px] h-[32px] rounded-full border border-[var(--line)] bg-white flex items-center justify-center shadow-[var(--shadow2)] text-lg">↓</div>
+                                        <span className="text-sm">Desliza para entender el patrón y ver tu evaluación detallada.</span>
+                                    </div>
                                 </div>
-                            </aside>
-                        </div>
+                                <aside className="card-custom hero-card" aria-label="Validación rápida">
+                                    <b className="block text-[12px] text-[var(--muted2)] tracking-[.14em] uppercase mb-[10px]">Lo principal de tu resultado</b>
+                                    <h3 className="m-0 mb-[10px] text-[18px] text-[var(--navy)] font-serif">Esta no es tu "Personalidad".</h3>
+                                    <ul className="m-0 pl-[18px] text-[var(--muted)] text-[14px]">
+                                        <li className="my-[8px]">Al somatizar de esta forma nos indica un <b>circuito aprendido</b> del sistema nervioso intentando protegerte de la carga acumulada.</li>
+                                        <li className="my-[8px]">Puede estar activándose incluso cuando no hay ni peligro ni tensión aparente frente a ti (ansiedad flotante).</li>
+                                        <li className="my-[8px]">Toda esta sensación puede entrenarse para recuperar el control utilizando neuroplasticidad comprobada.</li>
+                                    </ul>
+                                    <div className="micro">
+                                        <div className="tag-custom">Análisis de Reacciones</div>
+                                        <div className="tag-custom">Medición Clínica Real</div>
+                                        <div className="tag-custom">Ruta Terapéutica</div>
+                                    </div>
+                                </aside>
+                            </div>
+                        )}
                     </div>
                 </section>
 
-                <section className="section-custom" id="transformar">
-                    <div className="custom-container grid-2">
-                        <div className="card-custom p-[22px]">
-                            <h2 className="m-0 mb-[12px] text-[24px] tracking-[-.2px] text-[var(--navy)] font-serif">Qué significa a nivel neurobiológico</h2>
-                            <p className="m-0 mb-[16px] text-[var(--muted)] leading-relaxed">{activeProfile.definition}</p>
-                            <div className="callout-custom">El objetivo del tratamiento no es anular tus capacidades, sino restaurar un equilibrio sólido y devolverte tu salud orgánica para no depender farmacológicamente.</div>
-                        </div>
-                        <div className="card-custom p-[22px]">
-                            <h2 className="m-0 mb-[12px] text-[24px] tracking-[-.2px] text-[var(--navy)] font-serif">Por qué se sostiene el {activeProfile.subtitle} en ti</h2>
-                            <p className="m-0 mb-[16px] text-[var(--muted)] leading-relaxed" dangerouslySetInnerHTML={{ __html: activeProfile.origin.replace(/'([^']+)'/g, "<b>'$1'</b>") }}></p>
-                            <p className="m-0 mb-[4px] text-[12px] uppercase font-bold text-[var(--teal)]">SÍNTESIS ESPECÍFICA DE TUS VARIABLES:</p>
-                            <p className="m-0 text-[14px] text-[var(--navy)]">{results.interrelacion} ({results.ITA} de carga frente a {results.Re} de recursos)</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="section-custom" id="video">
-                    <div className="custom-container">
-                        <div className="card-custom p-[24px]">
-                            <h2 className="m-0 mb-[10px] text-[26px] tracking-[-.2px] text-[var(--navy)] font-serif text-center">Entiende tu diagnóstico con este video detallado</h2>
-                            <p className="m-0 mb-[24px] text-[var(--muted)] text-center max-w-2xl mx-auto">Reproduce tu sesión para entender exactamente cómo tu cerebro aprendió este mecanismo y por qué nuestra reprogramación clínica apunta al origen del problema.</p>
-                            <div className="max-w-4xl mx-auto aspect-video rounded-[22px] overflow-hidden border border-[rgba(11,18,32,.12)] shadow-xl bg-black relative">
-                                <iframe src={activeProfile.video} title={`Video perfil ${activeProfile.subtitle}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="w-full h-full border-0 absolute top-0 left-0"></iframe>
-                            </div>
-                            <div className="flex gap-[16px] flex-wrap items-center justify-center mt-[24px]">
-                                <a className="btn-custom primary text-base px-8 py-4" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Proceder a la Solución de 30 días</a>
-                                <a className="btn-custom text-base px-8 py-4" href={`https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${wpMsg}`} target="_blank" rel="noopener noreferrer">Ver contenido de la solución paso a paso</a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="section-custom bg-white/40" id="incluye">
-                    <div className="custom-container">
-                        <div className="card-custom p-[24px] md:p-[32px]">
-                            <h2 className="m-0 mb-[10px] text-[28px] tracking-[-.2px] text-[var(--navy)] font-serif">Cómo transicionarlo (Protocolo RFAI • 30 días)</h2>
-                            <p className="m-0 mb-[24px] text-[var(--muted)] text-[16px] max-w-3xl">Un protocolo estricto clínico-práctico totalmente fundado en tu neuroplasticidad para reorganizar tu respuesta inconsciente. El programa no intentará forzar tu memoria, <b>te guiará para asentar respuestas biológicas de paz interior duradera</b>.</p>
-
-                            <div className="value-grid">
-                                <div className="value hover:-translate-y-1 transition-transform">
-                                    <div className="icon">1</div>
-                                    <b className="block mb-[6px] text-[var(--navy)] text-base">Auditoría Inmersiva Inicial</b>
-                                    <p className="m-0 text-[var(--muted)] text-[14px]">Sesión exclusiva donde evaluamos tu estado base, marcaciones y gatillantes emocionales para trazar tu viaje.</p>
+                {results.perfil !== "Indeterminado" && (
+                    <>
+                        <section className="section-custom" id="transformar">
+                            <div className="custom-container grid-2">
+                                <div className="card-custom p-[22px]">
+                                    <h2 className="m-0 mb-[12px] text-[24px] tracking-[-.2px] text-[var(--navy)] font-serif">Qué significa a nivel neurobiológico</h2>
+                                    <p className="m-0 mb-[16px] text-[var(--muted)] leading-relaxed">{activeProfile.definition}</p>
+                                    <div className="callout-custom">El objetivo del tratamiento no es anular tus capacidades, sino restaurar un equilibrio sólido y devolverte tu salud orgánica para no depender farmacológicamente.</div>
                                 </div>
-                                <div className="value hover:-translate-y-1 transition-transform">
-                                    <div className="icon">2</div>
-                                    <b className="block mb-[6px] text-[var(--navy)] text-base">Hipnosis Clínica Especializada</b>
-                                    <p className="m-0 text-[var(--muted)] text-[14px]">Audios y sugestión subliminal para acceder a capas profundas y reescribir progresivamente tu exigencia metabólica.</p>
-                                </div>
-                                <div className="value hover:-translate-y-1 transition-transform">
-                                    <div className="icon">3</div>
-                                    <b className="block mb-[6px] text-[var(--navy)] text-base">Trackeo e-Integrativo</b>
-                                    <p className="m-0 text-[var(--muted)] text-[14px]">Cuestionarios o cuadernos semanales donde medimos empíricamente cómo el cambio está asentándose en ti.</p>
-                                </div>
-                                <div className="value hover:-translate-y-1 transition-transform">
-                                    <div className="icon">4</div>
-                                    <b className="block mb-[6px] text-[var(--navy)] text-base">Acompañamiento Permanente</b>
-                                    <p className="m-0 text-[var(--muted)] text-[14px]">Anotaciones y revisiones periódicas que validan que la reprogramación neuronal no sea por azar, sino un hábito.</p>
-                                </div>
-                                <div className="value hover:-translate-y-1 transition-transform">
-                                    <div className="icon">5</div>
-                                    <b className="block mb-[6px] text-[var(--navy)] text-base">Auditoría Psíquica de Cierre</b>
-                                    <p className="m-0 text-[var(--muted)] text-[14px]">Test Final y Evaluación para observar y confirmar tu nuevo balance interno de variables y resultados consolidables.</p>
-                                </div>
-                                <div className="value hover:-translate-y-1 transition-transform">
-                                    <div className="icon">+</div>
-                                    <b className="block mb-[6px] text-[var(--navy)] text-base">Audios de Blindaje (SOS)</b>
-                                    <p className="m-0 text-[var(--muted)] text-[14px]">Kit de moduladores extra para situaciones sorpresivas de alta sobrecarga emocional y resiliencia a largo plazo.</p>
+                                <div className="card-custom p-[22px]">
+                                    <h2 className="m-0 mb-[12px] text-[24px] tracking-[-.2px] text-[var(--navy)] font-serif">Por qué se sostiene el {activeProfile.subtitle} en ti</h2>
+                                    <p className="m-0 mb-[16px] text-[var(--muted)] leading-relaxed" dangerouslySetInnerHTML={{ __html: activeProfile.origin.replace(/'([^']+)'/g, "<b>'$1'</b>") }}></p>
+                                    <p className="m-0 mb-[4px] text-[12px] uppercase font-bold text-[var(--teal)]">SÍNTESIS ESPECÍFICA DE TUS VARIABLES:</p>
+                                    <p className="m-0 text-[14px] text-[var(--navy)]">{results.interrelacion} ({results.ITA} de carga frente a {results.Re} de recursos)</p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </section>
+                        </section>
 
-                <section className="section-custom mb-20" id="comprar">
-                    <div className="custom-container">
-                        <div className="offer-box p-[24px] md:p-[32px]">
-                            <div className="max-w-xl">
-                                <h2 className="m-0 mb-[12px] text-[32px] md:text-[40px] tracking-[-1px] text-[var(--navy)] font-serif leading-tight">Cambia todo el enfoque de tu vida en los próximos 30 días</h2>
-                                <p className="m-0 mb-[24px] text-[var(--muted)] text-base">
-                                    Si comprendes de dónde viene tu desgaste pero pareces seguir reaccionando en automático con miedo o desgaste cada día, nuestro protocolo clínico integral (RFAI) modificará esta inercia protegiendo tu salud.
-                                </p>
-                                <div className="guarantee">
-                                    <div className="font-black text-xl">✔</div>
-                                    <div className="text-base">
-                                        <b>Proceso guiado, no material en frío</b>. Obtienes intervenciones de hipnosis real y revisiones de equipo, una garantía para una transformación verificable.
+                        <section className="section-custom" id="video">
+                            <div className="custom-container">
+                                <div className="card-custom p-[24px]">
+                                    <h2 className="m-0 mb-[10px] text-[26px] tracking-[-.2px] text-[var(--navy)] font-serif text-center">Entiende tu diagnóstico con este video detallado</h2>
+                                    <p className="m-0 mb-[24px] text-[var(--muted)] text-center max-w-2xl mx-auto">Reproduce tu sesión para entender exactamente cómo tu cerebro aprendió este mecanismo y por qué nuestra reprogramación clínica apunta al origen del problema.</p>
+                                    <div className="max-w-4xl mx-auto aspect-video rounded-[22px] overflow-hidden border border-[rgba(11,18,32,.12)] shadow-xl bg-black relative">
+                                        <iframe src={activeProfile.video} title={`Video perfil ${activeProfile.subtitle}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="w-full h-full border-0 absolute top-0 left-0"></iframe>
+                                    </div>
+                                    <div className="flex gap-[16px] flex-wrap items-center justify-center mt-[24px]">
+                                        <a className="btn-custom primary text-base px-8 py-4" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Proceder a la Solución de 30 días</a>
+                                        <a className="btn-custom text-base px-8 py-4" href={`https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${wpMsg}`} target="_blank" rel="noopener noreferrer">Ver contenido de la solución paso a paso</a>
                                     </div>
                                 </div>
                             </div>
-                            <div className="w-full md:w-auto mt-8 md:mt-0 md:min-w-[320px]">
-                                <div className="price mb-2">
-                                    <div className="text-[36px] md:text-[48px] font-black text-[var(--navy)] tracking-tighter">$290.000</div>
-                                </div>
-                                <div className="text-[13px] text-[var(--muted2)] mb-8 font-medium">Tarifa única total por lanzamiento del Método Integro Completo</div>
-                                <div className="flex flex-col gap-[16px]">
-                                    <a className="btn-custom primary text-lg py-5 shadow-[0_22px_50px_rgba(14,26,38,.20)] hover:-translate-y-1" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">🛒 COMPRAR ACCESO ONLINE AHORA</a>
-                                    <a className="btn-custom border-2 border-[#25D366] text-[#128C7E] text-base py-4 hover:bg-[#25D366] hover:text-white" href={`https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${wpMsg}`} target="_blank" rel="noopener noreferrer">📲 Consultar dudas por WhatsApp</a>
+                        </section>
+
+                        <section className="section-custom bg-white/40" id="incluye">
+                            <div className="custom-container">
+                                <div className="card-custom p-[24px] md:p-[32px]">
+                                    <h2 className="m-0 mb-[10px] text-[28px] tracking-[-.2px] text-[var(--navy)] font-serif">Cómo transicionarlo (Protocolo RFAI • 30 días)</h2>
+                                    <p className="m-0 mb-[24px] text-[var(--muted)] text-[16px] max-w-3xl">Un protocolo estricto clínico-práctico totalmente fundado en tu neuroplasticidad para reorganizar tu respuesta inconsciente. El programa no intentará forzar tu memoria, <b>te guiará para asentar respuestas biológicas de paz interior duradera</b>.</p>
+
+                                    <div className="value-grid">
+                                        <div className="value hover:-translate-y-1 transition-transform">
+                                            <div className="icon">1</div>
+                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Auditoría Inmersiva Inicial</b>
+                                            <p className="m-0 text-[var(--muted)] text-[14px]">Sesión exclusiva donde evaluamos tu estado base, marcaciones y gatillantes emocionales para trazar tu viaje.</p>
+                                        </div>
+                                        <div className="value hover:-translate-y-1 transition-transform">
+                                            <div className="icon">2</div>
+                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Hipnosis Clínica Especializada</b>
+                                            <p className="m-0 text-[var(--muted)] text-[14px]">Audios y sugestión subliminal para acceder a capas profundas y reescribir progresivamente tu exigencia metabólica.</p>
+                                        </div>
+                                        <div className="value hover:-translate-y-1 transition-transform">
+                                            <div className="icon">3</div>
+                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Trackeo e-Integrativo</b>
+                                            <p className="m-0 text-[var(--muted)] text-[14px]">Cuestionarios o cuadernos semanales donde medimos empíricamente cómo el cambio está asentándose en ti.</p>
+                                        </div>
+                                        <div className="value hover:-translate-y-1 transition-transform">
+                                            <div className="icon">4</div>
+                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Acompañamiento Permanente</b>
+                                            <p className="m-0 text-[var(--muted)] text-[14px]">Anotaciones y revisiones periódicas que validan que la reprogramación neuronal no sea por azar, sino un hábito.</p>
+                                        </div>
+                                        <div className="value hover:-translate-y-1 transition-transform">
+                                            <div className="icon">5</div>
+                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Auditoría Psíquica de Cierre</b>
+                                            <p className="m-0 text-[var(--muted)] text-[14px]">Test Final y Evaluación para observar y confirmar tu nuevo balance interno de variables y resultados consolidables.</p>
+                                        </div>
+                                        <div className="value hover:-translate-y-1 transition-transform">
+                                            <div className="icon">+</div>
+                                            <b className="block mb-[6px] text-[var(--navy)] text-base">Audios de Blindaje (SOS)</b>
+                                            <p className="m-0 text-[var(--muted)] text-[14px]">Kit de moduladores extra para situaciones sorpresivas de alta sobrecarga emocional y resiliencia a largo plazo.</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </section>
+                        </section>
+
+                        <section className="section-custom mb-20" id="comprar">
+                            <div className="custom-container">
+                                <div className="offer-box p-[24px] md:p-[32px]">
+                                    <div className="max-w-xl">
+                                        <h2 className="m-0 mb-[12px] text-[32px] md:text-[40px] tracking-[-1px] text-[var(--navy)] font-serif leading-tight">Cambia todo el enfoque de tu vida en los próximos 30 días</h2>
+                                        <p className="m-0 mb-[24px] text-[var(--muted)] text-base">
+                                            Si comprendes de dónde viene tu desgaste pero pareces seguir reaccionando en automático con miedo o desgaste cada día, nuestro protocolo clínico integral (RFAI) modificará esta inercia protegiendo tu salud.
+                                        </p>
+                                        <div className="guarantee">
+                                            <div className="font-black text-xl">✔</div>
+                                            <div className="text-base">
+                                                <b>Proceso guiado, no material en frío</b>. Obtienes intervenciones de hipnosis real y revisiones de equipo, una garantía para una transformación verificable.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="w-full md:w-auto mt-8 md:mt-0 md:min-w-[320px]">
+                                        <div className="price mb-2">
+                                            <div className="text-[36px] md:text-[48px] font-black text-[var(--navy)] tracking-tighter">$290.000</div>
+                                        </div>
+                                        <div className="text-[13px] text-[var(--muted2)] mb-8 font-medium">Tarifa única total por lanzamiento del Método Integro Completo</div>
+                                        <div className="flex flex-col gap-[16px]">
+                                            <a className="btn-custom primary text-lg py-5 shadow-[0_22px_50px_rgba(14,26,38,.20)] hover:-translate-y-1" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">🛒 COMPRAR ACCESO ONLINE AHORA</a>
+                                            <a className="btn-custom border-2 border-[#25D366] text-[#128C7E] text-base py-4 hover:bg-[#25D366] hover:text-white" href={`https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${wpMsg}`} target="_blank" rel="noopener noreferrer">📲 Consultar dudas por WhatsApp</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </>
+                )}
 
                 <footer className="pt-[32px] pb-[90px] md:pb-[70px] border-t border-[var(--line)] text-[var(--muted2)] text-[12px] md:text-[14px]">
                     <div className="custom-container text-center text-slate-400">
@@ -699,15 +725,17 @@ const TestRFAI: React.FC = () => {
                     </div>
                 </footer>
 
-                <div className="sticky-cta">
-                    <div className="max-w-[1120px] mx-auto bg-[rgba(255,255,255,.9)] backdrop-blur-[16px] border border-[var(--line)] rounded-[20px] shadow-[0_-10px_40px_rgba(14,26,38,.12)] p-[12px] flex items-center justify-between gap-[12px]">
-                        <div>
-                            <b className="text-[14px] text-[var(--navy)] font-bold">Resultado: {activeProfile.subtitle}</b>
-                            <span className="block text-[12px] text-[var(--muted2)] font-medium">Tratamiento Clínico RFAI 30 días</span>
+                {results.perfil !== "Indeterminado" && (
+                    <div className="sticky-cta">
+                        <div className="max-w-[1120px] mx-auto bg-[rgba(255,255,255,.9)] backdrop-blur-[16px] border border-[var(--line)] rounded-[20px] shadow-[0_-10px_40px_rgba(14,26,38,.12)] p-[12px] flex items-center justify-between gap-[12px]">
+                            <div>
+                                <b className="text-[14px] text-[var(--navy)] font-bold">Resultado: {activeProfile.subtitle}</b>
+                                <span className="block text-[12px] text-[var(--muted2)] font-medium">Tratamiento Clínico RFAI 30 días</span>
+                            </div>
+                            <a className="btn-custom primary py-[12px] px-[20px] rounded-[16px] text-sm" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Comprar Ahora ($290k)</a>
                         </div>
-                        <a className="btn-custom primary py-[12px] px-[20px] rounded-[16px] text-sm" href={activeProfile.payment} target="_blank" rel="noopener noreferrer">Comprar Ahora ($290k)</a>
                     </div>
-                </div>
+                )}
 
             </div>
         );
