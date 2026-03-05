@@ -367,6 +367,146 @@ const TestRFAI: React.FC = () => {
         const lvlF = getLevel(results.AF, false);
         const lvlReg = getLevel(results.Re, true);
 
+        if (isReview) {
+            return (
+                <div className="bg-[#F6FAFF] min-h-screen text-[#0B1220] font-sans antialiased overflow-x-hidden" style={{ background: 'radial-gradient(1200px 420px at 50% 0%,#EAF4FF 0%, #F6FAFF 60%)', lineHeight: 1.45 }}>
+                    <style dangerouslySetInnerHTML={{
+                        __html: `
+                        :root{--bg:#F6FAFF;--card:#FFFFFF;--text:#0B1220;--muted:#52607A;--line:#E5ECF6;--primary:#0F2A4A;--accent:#2D7EF7;--ok:#E9FFF3;--okLine:#BFEFD3;--warn:#FFF6E6;--warnLine:#F2D3A0;--radius:18px;--radius2:22px;--shadow:0 12px 30px rgba(15,42,74,.10);--max:1100px}
+                        .container{width:min(var(--max),calc(100% - 40px));margin:auto}
+                        .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius2);box-shadow:var(--shadow)}
+                        .muted{color:var(--muted)}
+                        .topbar{border-bottom:1px solid var(--line);background:rgba(246,250,255,.8);position:sticky;top:0;z-index:50;backdrop-filter:blur(8px)}
+                        .nav-review{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+                        .logo{width:40px;height:40px;border-radius:999px;background:conic-gradient(from 180deg,#7CC4FF,#2D7EF7,#6BE6C9,#7CC4FF)}
+                        .brand{display:flex;gap:10px;align-items:center;font-weight:700}
+                        .btn{padding:12px 16px;border-radius:14px;font-weight:700;font-size:13px;cursor:pointer;border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+                        .btn-primary{background:linear-gradient(180deg,#1B4D7A,#0F2A4A);color:#fff;box-shadow:0 8px 20px rgba(15,42,74,.20)}
+                        .btn-ghost{border:1px solid var(--line);background:#fff;color:var(--primary)}
+                        .hero-review{padding:40px 0 20px}
+                        .grid-review{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;margin-top:20px;align-items:start}
+                        @media(max-width:900px){.grid-review{grid-template-columns:1fr}}
+                        .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:bold}
+                        .h1-review{font-size:clamp(36px, 5vw, 48px);margin:8px 0 12px;letter-spacing:-1px;line-height:1.1;font-weight:800;color:var(--text)}
+                        .lead-review{color:var(--muted);font-size:18px;max-width:54ch}
+                        .note{margin-top:24px;padding:18px;border-radius:var(--radius);border:1px solid var(--warnLine);background:linear-gradient(180deg,#fff,var(--warn))}
+                        .right{padding:24px}
+                        .right h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;margin-top:0}
+                        .list{display:grid;gap:12px;margin-top:10px}
+                        .li{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff}
+                        .section-review{padding:40px 0}
+                        .section-title{font-size:28px;margin:0 0 12px;letter-spacing:-.5px;color:var(--primary)}
+                        .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+                        @media(max-width:900px){.steps{grid-template-columns:1fr}}
+                        .step{padding:20px;border-radius:16px;border:1px solid var(--line);background:#fff;box-shadow:0 4px 12px rgba(15,42,74,.04)}
+                        .badge{width:32px;height:32px;border-radius:10px;background:#EAF2FF;color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:12px}
+                        .wa{padding:30px;border-radius:var(--radius2);border:1px solid var(--okLine);background:linear-gradient(180deg,#fff,var(--ok));display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;box-shadow:0 12px 30px rgba(16,185,129,.10)}
+                        footer.review-footer{padding:30px 0;font-size:13px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
+                        `
+                    }} />
+
+                    <div className="topbar">
+                        <div className="container">
+                            <div className="nav-review">
+                                <div className="brand">
+                                    <div className="logo"></div>
+                                    <div>Equilibrar</div>
+                                </div>
+                                <button onClick={(e) => { e.preventDefault(); document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" }); }} className="btn btn-primary">Contactar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <header className="hero-review" id="top">
+                        <div className="container">
+                            <p className="kicker">Resultado del Test</p>
+                            <h1 className="h1-review">Tu resultado requiere revisión de especialista</h1>
+                            <p className="lead-review">
+                                En algunos casos, los puntajes no encajan completamente en una sola categoría. Esto no significa que haya algo incorrecto. Significa que tu patrón necesita una lectura más profunda para entregarte un resultado preciso.
+                            </p>
+                            <div className="note">
+                                <strong style={{color: 'var(--primary)'}}>Qué ocurrirá ahora:</strong><br/>
+                                Un especialista revisará tu resultado y te contactaremos dentro de <strong>48 horas</strong> con una lectura más detallada.
+                            </div>
+                        </div>
+                    </header>
+
+                    <section className="section-review">
+                        <div className="container grid-review">
+                            <div>
+                                <h2 className="section-title">Qué significa esto</h2>
+                                <p className="muted" style={{ fontSize: '16px', maxWidth: '50ch' }}>
+                                    A veces los resultados muestran combinaciones entre distintas dimensiones de activación y regulación. En estos casos, el análisis automático no es suficiente y es necesario realizar una revisión clínica breve.
+                                </p>
+                            </div>
+                            <aside className="card right">
+                                <h3>Qué puedes esperar</h3>
+                                <div className="list">
+                                    <div className="li">
+                                        <strong style={{ display: 'block', marginBottom: '4px', color: 'var(--primary)' }}>Lectura más precisa</strong>
+                                        <div className="muted" style={{ fontSize: '14px' }}>Identificamos si tu patrón corresponde a un perfil mixto.</div>
+                                    </div>
+                                    <div className="li">
+                                        <strong style={{ display: 'block', marginBottom: '4px', color: 'var(--primary)' }}>Explicación clara</strong>
+                                        <div className="muted" style={{ fontSize: '14px' }}>Te devolvemos el resultado en un lenguaje comprensible.</div>
+                                    </div>
+                                    <div className="li">
+                                        <strong style={{ display: 'block', marginBottom: '4px', color: 'var(--primary)' }}>Orientación</strong>
+                                        <div className="muted" style={{ fontSize: '14px' }}>Si corresponde, te indicamos el mejor siguiente paso.</div>
+                                    </div>
+                                </div>
+                            </aside>
+                        </div>
+                    </section>
+
+                    <section className="section-review">
+                        <div className="container">
+                            <h2 className="section-title">Qué pasará ahora</h2>
+                            <div className="steps">
+                                <div className="step">
+                                    <div className="badge">1</div>
+                                    <strong style={{ display: 'block', marginBottom: '6px', color: 'var(--primary)' }}>Revisión clínica</strong>
+                                    <p className="muted" style={{ margin: 0, fontSize: '14px' }}>Un especialista revisa tus puntajes y sus interacciones.</p>
+                                </div>
+                                <div className="step">
+                                    <div className="badge">2</div>
+                                    <strong style={{ display: 'block', marginBottom: '6px', color: 'var(--primary)' }}>Definición del perfil</strong>
+                                    <p className="muted" style={{ margin: 0, fontSize: '14px' }}>Se identifica el patrón dominante o perfil mixto.</p>
+                                </div>
+                                <div className="step">
+                                    <div className="badge">3</div>
+                                    <strong style={{ display: 'block', marginBottom: '6px', color: 'var(--primary)' }}>Contacto en 48 horas</strong>
+                                    <p className="muted" style={{ margin: 0, fontSize: '14px' }}>Te escribimos con tu resultado preciso.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="section-review" id="contacto" style={{ marginBottom: '40px' }}>
+                        <div className="container">
+                            <div className="wa">
+                                <div>
+                                    <h2 style={{ margin: '0 0 8px', fontSize: '24px', color: '#047857', letterSpacing: '-.5px' }}>¿Prefieres escribirnos ahora?</h2>
+                                    <p className="muted" style={{ margin: 0, fontSize: '15px', maxWidth: '400px' }}>
+                                        Puedes contactarnos por WhatsApp si te resulta más cómodo. Responderemos lo antes posible.
+                                    </p>
+                                </div>
+                                <a className="btn btn-primary" style={{ background: '#10b981', boxShadow: '0 8px 24px rgba(16,185,129,.3)' }} href="https://api.whatsapp.com/send/?phone=56930179724&text=Hola,%20hice%20el%20test%20y%20mi%20resultado%20requiere%20revisión%20especialista.%20¿Me%20pueden%20contactar?" target="_blank" rel="noopener noreferrer">
+                                    Abrir WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer className="review-footer">
+                        <div className="container">
+                            © 2026 Centro Clínico Equilibrar
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
         return (
             <div className="bg-[#F6FAFF] min-h-screen text-[#0B1220] font-sans antialiased overflow-x-hidden">
                 <style dangerouslySetInnerHTML={{
