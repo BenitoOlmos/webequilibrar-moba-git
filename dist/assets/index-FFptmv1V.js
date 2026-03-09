@@ -305,14 +305,13 @@ Please change the parent <Route path="${B}"> to <Route path="${B==="/"?"*":`${B}
         }
 
         .home-btn-secondary {
-          background:rgba(255,255,255,.08);
+          background:var(--primary);
           color:#ffffff;
-          border-color:rgba(255,255,255,.28);
-          backdrop-filter: blur(10px);
+          border-color:transparent;
         }
 
         .home-btn-secondary:hover {
-          background:rgba(255,255,255,.14);
+          background:var(--primary-dark);
         }
 
         .home-hero {
