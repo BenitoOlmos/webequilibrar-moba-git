@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import logoImg from '../assets/images/logo-clinica-equilibrar.png';
 import rfai1Img from '../assets/images/RFAI-1.png';
@@ -35,6 +34,7 @@ const Home: React.FC = () => {
           background: var(--bg);
           color: var(--text);
           line-height: 1.55;
+          padding-top: 90px;
         }
 
         .home-wrapper * {
@@ -57,19 +57,24 @@ const Home: React.FC = () => {
           text-decoration:none;
         }
 
+        .home-wrapper html {
+          scroll-behavior:smooth;
+        }
+
         .home-container {
           width:min(92%, var(--max));
           margin:0 auto;
         }
 
         .home-topbar {
-          position:absolute;
+          position:fixed;
           top:0;
           left:0;
           width:100%;
-          z-index:50;
-          background:transparent;
-          border-bottom:1px solid rgba(255,255,255,.12);
+          z-index:999;
+          background:rgba(10,20,24,.75);
+          backdrop-filter: blur(14px);
+          border-bottom:1px solid rgba(255,255,255,.08);
         }
 
         .home-header {
@@ -156,14 +161,13 @@ const Home: React.FC = () => {
         }
 
         .home-btn-secondary {
-          background:rgba(255,255,255,.08);
+          background:var(--primary);
           color:#ffffff;
-          border-color:rgba(255,255,255,.28);
-          backdrop-filter: blur(10px);
+          border-color:transparent;
         }
 
         .home-btn-secondary:hover {
-          background:rgba(255,255,255,.14);
+          background:var(--primary-dark);
         }
 
         .home-hero {
@@ -395,18 +399,18 @@ const Home: React.FC = () => {
 
         .home-podcast-box {
           display:grid;
-          grid-template-columns:.95fr 1.05fr;
-          gap:34px;
+          grid-template-columns:.9fr 1.1fr;
+          gap:28px;
           align-items:center;
           background:#fff;
           border:1px solid var(--line);
           border-radius:32px;
-          padding:34px;
+          padding:26px;
           box-shadow:var(--shadow);
         }
 
         .home-podcast-embed {
-          min-height:420px;
+          min-height:auto;
           border-radius:24px;
           overflow:hidden;
           border:1px solid var(--line);
@@ -414,12 +418,12 @@ const Home: React.FC = () => {
           display:flex;
           align-items:center;
           justify-content:center;
-          padding:18px;
+          padding:14px;
         }
 
         .home-podcast-embed iframe {
           width:100%;
-          min-height:380px;
+          height:232px;
           border:0;
           border-radius:16px;
         }
@@ -741,7 +745,7 @@ const Home: React.FC = () => {
 
          <div className="home-topbar">
             <header className="home-container home-header">
-               <a href="/" className="home-brand" aria-label="Centro Clínico Equilibrar">
+               <a href="#top" className="home-brand" aria-label="Centro Clínico Equilibrar">
                   <img src={logoImg} alt="Logo Centro Clínico Equilibrar" />
                   <div className="home-brand-copy">
                      <strong>Centro Clínico Equilibrar</strong>
@@ -758,12 +762,12 @@ const Home: React.FC = () => {
                </nav>
 
                <div className="home-header-actions">
-                  <Link className="home-btn home-btn-primary" to="/test-rfai">Hacer test</Link>
+                  <a className="home-btn home-btn-primary" href="#/test-rfai">Hacer test</a>
                </div>
             </header>
          </div>
 
-         <main>
+         <main id="top">
             <section className="home-hero">
                <div className="home-hero-video">
                   <video
@@ -791,8 +795,8 @@ const Home: React.FC = () => {
                         </p>
 
                         <div className="home-hero-actions">
-                           <Link className="home-btn home-btn-primary" to="/test-rfai">Hacer test</Link>
-                           <Link className="home-btn home-btn-secondary" to="/rfai">Conocer RFAI</Link>
+                           <a className="home-btn home-btn-primary" href="#/test-rfai">Hacer test</a>
+                           <a className="home-btn home-btn-secondary" href="#/rfai">Conocer RFAI</a>
                         </div>
                      </div>
                   </div>
@@ -870,6 +874,15 @@ const Home: React.FC = () => {
 
                      <div className="home-rfai-badge">RFAI = Reprogramación Focalizada de Alto Impacto</div>
 
+                     <div className="home-hero-actions" style={{ marginTop: '22px' }}>
+                        <a className="home-btn home-btn-primary" href="#/rfai">
+                           Conocer RFAI
+                        </a>
+                        <a className="home-btn home-btn-secondary" style={{ backgroundColor: '#0f97b9', color: '#fff', border: '1px solid transparent', backdropFilter: 'none' }} href="#/test-rfai">
+                           Hacer test
+                        </a>
+                     </div>
+
                      <div className="home-rfai-grid">
                         <article className="home-rfai-card">
                            <h3>Diagnóstico</h3>
@@ -935,9 +948,9 @@ const Home: React.FC = () => {
                               Abrir en Spotify
                            </a>
 
-                           <Link className="home-btn home-btn-secondary" style={{ backgroundColor: '#0f97b9', color: '#fff', border: '1px solid transparent', backdropFilter: 'none' }} to="/test-rfai">
+                           <a className="home-btn home-btn-secondary" style={{ backgroundColor: '#0f97b9', color: '#fff', border: '1px solid transparent', backdropFilter: 'none' }} href="#/test-rfai">
                               Hacer test
-                           </Link>
+                           </a>
                         </div>
                      </div>
                   </div>
@@ -1084,7 +1097,7 @@ const Home: React.FC = () => {
                            </p>
 
                            <div className="home-cta-actions">
-                              <Link className="home-btn home-btn-primary" to="/test-rfai">Hacer test</Link>
+                              <a className="home-btn home-btn-primary" href="#/test-rfai">Hacer test</a>
                               <a
                                  className="home-btn home-btn-secondary"
                                  href="https://wa.me/56930179724?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20el%20Test%20RFAI%20y%20el%20modelo%20de%20trabajo%20de%20Equilibrar."
