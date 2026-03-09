@@ -146,27 +146,24 @@ const Home: React.FC = () => {
         }
 
         .home-btn-primary {
-          background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-          color: #ffffff;
-          box-shadow: 0 14px 28px rgba(15, 151, 185, 0.25);
-          border: none;
+          background:#ffffff;
+          color:var(--primary-dark);
+          box-shadow:0 12px 26px rgba(0,0,0,.12);
         }
 
         .home-btn-primary:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 18px 32px rgba(15, 151, 185, 0.35);
+          transform:translateY(-1px);
         }
 
         .home-btn-secondary {
-          background: rgba(255, 255, 255, 0.15);
-          color: #ffffff;
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          backdrop-filter: blur(12px);
+          background:rgba(255,255,255,.08);
+          color:#ffffff;
+          border-color:rgba(255,255,255,.28);
+          backdrop-filter: blur(10px);
         }
 
         .home-btn-secondary:hover {
-          background: rgba(255, 255, 255, 0.25);
-          color: #ffffff;
+          background:rgba(255,255,255,.14);
         }
 
         .home-hero {
@@ -938,7 +935,7 @@ const Home: React.FC = () => {
                               Abrir en Spotify
                            </a>
 
-                           <Link className="home-btn home-btn-secondary" style={{ backgroundColor: '#0f97b9', color: '#fff' }} to="/test-rfai">
+                           <Link className="home-btn home-btn-secondary" style={{ backgroundColor: '#0f97b9', color: '#fff', border: '1px solid transparent', backdropFilter: 'none' }} to="/test-rfai">
                               Hacer test
                            </Link>
                         </div>
