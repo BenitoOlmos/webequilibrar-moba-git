@@ -146,24 +146,27 @@ const Home: React.FC = () => {
         }
 
         .home-btn-primary {
-          background:#ffffff;
-          color:var(--primary-dark);
-          box-shadow:0 12px 26px rgba(0,0,0,.12);
+          background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+          color: #ffffff;
+          box-shadow: 0 14px 28px rgba(15, 151, 185, 0.25);
+          border: none;
         }
 
         .home-btn-primary:hover {
-          transform:translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow: 0 18px 32px rgba(15, 151, 185, 0.35);
         }
 
         .home-btn-secondary {
-          background:rgba(255,255,255,.08);
-          color:#ffffff;
-          border-color:rgba(255,255,255,.28);
-          backdrop-filter: blur(10px);
+          background: rgba(255, 255, 255, 0.15);
+          color: #ffffff;
+          border: 1px solid rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(12px);
         }
 
         .home-btn-secondary:hover {
-          background:rgba(255,255,255,.14);
+          background: rgba(255, 255, 255, 0.25);
+          color: #ffffff;
         }
 
         .home-hero {
