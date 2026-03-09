@@ -2,6 +2,7 @@ import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './pages/Home';
+import LandingRFAI from './pages/LandingRFAI';
 import ServiceDetail from './pages/ServiceDetail';
 import ProgramDetail from './pages/ProgramDetail';
 import Hypnosis from './pages/Hypnosis';
@@ -27,7 +28,8 @@ const App: React.FC = () => {
     <Router>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Layout><Home /></Layout>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/rfai" element={<LandingRFAI />} />
 
         {/* SERVICES - Hydrated via API */}
         <Route
