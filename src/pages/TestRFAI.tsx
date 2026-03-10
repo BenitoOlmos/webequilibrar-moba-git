@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Activity, Brain, HeartPulse, UserCircle2, ArrowRight, ShieldCheck, ArrowLeft, CheckCircle2, BarChart3, PlayCircle } from 'lucide-react';
 import { profilesData } from '../data/testRFAIProfiles';
+import logoImg from '../assets/images/logo-clinica-equilibrar.png';
 
 // Video URLs (YouTube Embeds)
 const vDesbordado = 'https://www.youtube.com/embed/SU_K-Qt4tf8';
@@ -324,27 +325,6 @@ const TestRFAI: React.FC = () => {
         }
     };
 
-    const renderProgressBar = () => {
-        const totalSteps = 5;
-        const progress = ((step + 1) / totalSteps) * 100;
-        return (
-            <div className="w-full max-w-2xl mx-auto mb-8 md:mb-12 px-2">
-                <div className="flex justify-between mb-2">
-                    {['Inicio', 'Cuerpo', 'Mente', 'Emoción', 'Regulación'].map((lbl, idx) => (
-                        <span key={idx} className={`text-[10px] md:text-xs font-bold uppercase tracking-wider ${step >= idx ? 'text-brand-primary' : 'text-slate-300'} transition-colors duration-300`}>
-                            {lbl}
-                        </span>
-                    ))}
-                </div>
-                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                        className="h-full bg-brand-primary transition-all duration-500 ease-in-out"
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
-            </div>
-        );
-    };
 
     if (showResults && results) {
         const matchProfileKey = results.perfil.split(" | ")[0].trim();
@@ -425,7 +405,7 @@ const TestRFAI: React.FC = () => {
                                 En algunos casos, los puntajes no encajan completamente en una sola categoría. Esto no significa que haya algo incorrecto. Significa que tu patrón necesita una lectura más profunda para entregarte un resultado preciso.
                             </p>
                             <div className="note">
-                                <strong style={{color: 'var(--primary)'}}>Qué ocurrirá ahora:</strong><br/>
+                                <strong style={{ color: 'var(--primary)' }}>Qué ocurrirá ahora:</strong><br />
                                 Un especialista revisará tu resultado y te contactaremos dentro de <strong>48 horas</strong> con una lectura más detallada.
                             </div>
                         </div>
@@ -606,19 +586,19 @@ const TestRFAI: React.FC = () => {
                     <div className="custom-container hero-grid">
                         <div>
                             <div className="result-chip">
-                                <span className="badge-dot" style={{ background: isReview ? '#6a7a8c' : 'var(--accent)' }}></span> 
+                                <span className="badge-dot" style={{ background: isReview ? '#6a7a8c' : 'var(--accent)' }}></span>
                                 {isReview ? "RESULTADO EN REVISIÓN" : "RESULTADO DEL ANÁLISIS ESTADÍSTICO"}
                             </div>
-                            
+
                             <h1 className="h1-custom">{activeProfile.title}</h1>
-                            
+
                             <p className="lead" dangerouslySetInnerHTML={{ __html: activeProfile.lead }} />
-                            
+
                             <div className="promise-box" dangerouslySetInnerHTML={{ __html: activeProfile.promise }} />
 
                             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '32px' }}>
                                 <button onClick={(e) => { e.preventDefault(); document.getElementById("video")?.scrollIntoView({ behavior: "smooth" }); }} className="btn-custom btn-primary">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'8px'}}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                                     Ver explicación en video
                                 </button>
                                 <button onClick={(e) => { e.preventDefault(); document.getElementById("patron")?.scrollIntoView({ behavior: "smooth" }); }} className="btn-custom btn-outline">Leer reporte completo ↓</button>
@@ -627,7 +607,7 @@ const TestRFAI: React.FC = () => {
 
                         <aside>
                             <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--muted)', letterSpacing: '1px', marginBottom: '16px' }}>RESUMEN DIMENSIONAL</div>
-                            
+
                             <div className="data-row">
                                 <span className="data-label">Activación Emocional</span>
                                 <span className={`data-value ${lvlE.cls}`}>{lvlE.text}</span>
@@ -644,7 +624,7 @@ const TestRFAI: React.FC = () => {
                                 <span className="data-label" style={{ color: 'var(--primary)' }}>Capacidad de Regulación</span>
                                 <span className={`data-value ${lvlReg.cls}`}>{lvlReg.text}</span>
                             </div>
-                            
+
                             <div style={{ marginTop: '24px', padding: '16px', borderRadius: '12px', background: 'var(--soft)', fontSize: '13px', color: 'var(--primary)', lineHeight: 1.5 }}>
                                 <strong style={{ display: 'block', marginBottom: '4px' }}>Diagnóstico de interrelación:</strong>
                                 {results.interrelacion}
@@ -726,16 +706,16 @@ const TestRFAI: React.FC = () => {
                                 </div>
                                 <h2 className="h2-custom" style={{ fontSize: '36px', marginBottom: '8px' }}>Tratamiento RFAI</h2>
                                 <p style={{ color: 'var(--muted)', fontSize: '16px', marginBottom: '8px' }}>Tu evaluación inicial y programa completo de recuperación.</p>
-                                
+
                                 <div style={{ fontSize: '56px', fontWeight: 900, color: 'var(--primary)', letterSpacing: '-2px', margin: '24px 0 8px' }}>
                                     $290.000<span style={{ fontSize: '18px', color: 'var(--muted)', fontWeight: 600, letterSpacing: '0' }}> CLP</span>
                                 </div>
                                 <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '32px' }}>Pago único y seguro vía MercadoPago.</p>
-                                
+
                                 <a href={activeProfile.paymentUrl} className="btn-custom btn-primary" style={{ width: '100%', fontSize: '18px', padding: '20px' }}>
                                     Iniciar Programa Ahora
                                 </a>
-                                
+
                                 <p style={{ marginTop: '20px', fontSize: '13px', color: 'var(--muted)' }}>
                                     ¿Tienes dudas? <a href={`https://api.whatsapp.com/send/?phone=56930179724&text=${encodeURIComponent('Hola, tengo dudas sobre el protocolo RFAI para el perfil: ' + activeProfile.title)}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'none' }}>Hablemos por WhatsApp</a>
                                 </p>
@@ -747,7 +727,7 @@ const TestRFAI: React.FC = () => {
                                 </div>
                                 <h2 className="h2-custom" style={{ fontSize: '32px' }}>Análisis a Medida</h2>
                                 <p style={{ color: 'var(--muted)', fontSize: '16px', marginBottom: '32px' }}>Tu evaluación inicial y programa de recuperación deben ser evaluados por nuestro equipo clínico.</p>
-                                
+
                                 <a href={`https://api.whatsapp.com/send/?phone=56930179724&text=Hola, acabo de terminar mi test y he recibido un resultado en revisión. Me gustaría saber más detalles.`} target="_blank" rel="noopener noreferrer" className="btn-custom btn-primary" style={{ width: '100%', fontSize: '18px', padding: '20px', background: '#10b981', boxShadow: '0 12px 30px rgba(16,185,129,.25)' }}>
                                     Contactar al equipo por WhatsApp
                                 </a>
@@ -755,141 +735,537 @@ const TestRFAI: React.FC = () => {
                         )}
                     </div>
                 </section>
-                
+
                 <footer style={{ padding: '40px 20px', textAlign: 'center', borderTop: '1px solid var(--line)', color: 'var(--muted)', fontSize: '14px' }}>
-                    © Centro Clínico Equilibrar • RFAI — Reprogramación Focalizada de Alto Impacto.<br/>
+                    © Centro Clínico Equilibrar • RFAI — Reprogramación Focalizada de Alto Impacto.<br />
                     La información arrojada y expuesta en este sitio es informativa y no reemplaza diagnóstico médico oficial.
                 </footer>
             </div>
         );
     }
-
-
-    // Vista de Preguntas
     const getStepContent = () => {
-        switch (step) {
-            case 0:
-                return (
-                    <div className="animate-fade-in-up">
-                        <div className="text-center mb-8">
-                            <h2 className="text-3xl md:text-4xl font-serif text-brand-heading mb-4">Bienvenido al test de autopercepción de equilibrio interno</h2>
-                            <p className="text-slate-500 max-w-md mx-auto leading-relaxed">
-                                Este test estima el balance entre tu carga interna y tus recursos regulatorios en los últimos 7 días.
-                            </p>
-                        </div>
-                        <div className="bg-white p-6 md:p-8 rounded-2xl shadow-luxury space-y-6 border border-brand-sand/30">
-                            <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-                                    <UserCircle2 size={16} className="text-brand-primary" /> Nombre Completo
-                                </label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={userInfo.name}
-                                    onChange={handleUserInfoChange}
-                                    className="w-full px-4 py-3 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-heading"
-                                    placeholder="Ej. Juan Pérez"
-                                    autoComplete="name"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-                                    <Activity size={16} className="text-brand-primary" /> Correo Electrónico
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={userInfo.email}
-                                    onChange={handleUserInfoChange}
-                                    className="w-full px-4 py-3 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-heading"
-                                    placeholder="juan@ejemplo.com"
-                                    autoComplete="email"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                );
-            case 1:
-                return <QuestionSection title="Activación Fisiológica" icon={<Activity />} startIndex={0} />;
-            case 2:
-                return <QuestionSection title="Activación Mental" icon={<Brain />} startIndex={7} />;
-            case 3:
-                return <QuestionSection title="Activación Emocional" icon={<HeartPulse />} startIndex={14} />;
-            case 4:
-                return <QuestionSection title="Regulación Interna" icon={<ShieldCheck />} startIndex={21} />;
-            default:
-                return null;
-        }
-    };
+        const startIndices = [0, 0, 7, 14, 21];
+        const titles = ["", "Activación Fisiológica", "Activación Mental", "Activación Emocional", "Regulación Interna"];
+        const actualStep = step;
+        const startIndex = startIndices[actualStep];
 
-    const QuestionSection = ({ title, icon, startIndex }: { title: string, icon: React.ReactNode, startIndex: number }) => (
-        <div className="animate-fade-in-up">
-            <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-light text-brand-primary mb-4">
-                    {icon}
-                </div>
-                <h2 className="text-2xl md:text-3xl font-serif text-brand-heading mb-2">{title}</h2>
-                <p className="text-xs uppercase tracking-widest font-bold text-brand-gold">Parte {(startIndex / 7) + 1} de 4</p>
-            </div>
-            <div className="bg-white rounded-2xl shadow-luxury border border-brand-sand/30 overflow-hidden">
-                <div className="bg-brand-sand/30 p-4 border-b border-brand-sand text-center">
-                    <p className="text-slate-600 text-sm font-medium">¿Cuánto te identifican estas afirmaciones en los <span className="font-bold text-brand-primary">últimos 7 días</span>?</p>
-                </div>
-                <div className="p-4 md:p-8 space-y-8 divide-y divide-slate-100">
+        return (
+            <div className="animate-fade-in-up">
+                <h3 className="text-xl font-bold mb-6 text-center" style={{ color: 'var(--primary)' }}>{titles[actualStep]}</h3>
+                <div className="space-y-6">
                     {questions.slice(startIndex, startIndex + 7).map((q, idx) => (
                         <QuestionRow key={startIndex + idx} index={startIndex + idx} question={q} answers={answers} setAnswer={handleAnswerChange} />
                     ))}
                 </div>
             </div>
-        </div>
-    );
+        );
+    };
+
+    const progressPercent = step > 0 ? ((step) / 4) * 100 : 0;
 
     return (
-        <div className="py-12 md:py-24 bg-brand-surface min-h-screen">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="rfai-test-layout">
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                .rfai-test-layout {
+                  --primary:#0f97b9;
+                  --primary-dark:#0a7f9a;
+                  --primary-soft:#eaf7fb;
+                  --text:#22343a;
+                  --text-soft:#667982;
+                  --line:#dfecef;
+                  --bg:#ffffff;
+                  --bg-soft:#f6fbfc;
+                  --shadow:0 18px 40px rgba(16, 69, 82, 0.08);
+                  --radius-xl:32px;
+                  --radius-lg:24px;
+                  --radius-md:18px;
+                  --max:1180px;
 
-                {renderProgressBar()}
+                  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                  background:linear-gradient(180deg, #fbfeff 0%, #f4f9fa 100%);
+                  color:var(--text);
+                  line-height:1.55;
+                  min-height: 100vh;
+                }
 
-                <div className="min-h-[400px]">
-                    {getStepContent()}
-                </div>
+                .rfai-test-layout a {text-decoration:none;color:inherit;}
+                .rfai-test-layout img {display:block;max-width:100%;object-fit:cover;}
 
-                {error && (
-                    <div className="mt-8 bg-red-50 text-red-600 p-4 rounded-xl text-center border border-red-100 animate-shake">
-                        <span className="font-medium text-sm">{error}</span>
-                    </div>
-                )}
+                .rfai-test-layout .container {
+                  width:min(92%, var(--max));
+                  margin:0 auto;
+                }
 
-                {/* Controles de Navegación Stepper */}
-                <div className="mt-8 flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-brand-sand/50">
-                    <button
-                        onClick={prevStep}
-                        disabled={step === 0 || isSubmitting}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-all ${step === 0 ? 'text-slate-300 cursor-not-allowed' : 'text-slate-600 hover:bg-slate-50 hover:text-brand-primary'}`}
-                    >
-                        <ArrowLeft size={16} /> Atrás
-                    </button>
+                /* topbar */
+                .rfai-test-layout .topbar {
+                  position:sticky;
+                  top:0;
+                  z-index:999;
+                  background:rgba(255,255,255,.92);
+                  backdrop-filter: blur(14px);
+                  border-bottom:1px solid rgba(34,52,58,.06);
+                }
 
-                    {step < 4 ? (
-                        <button
-                            onClick={nextStep}
-                            className="flex items-center gap-2 px-8 py-3 bg-brand-heading text-white rounded-xl hover:bg-brand-primary transition-all font-bold uppercase tracking-widest text-xs shadow-md shadow-brand-heading/20"
-                        >
-                            Continuar <ArrowRight size={16} />
-                        </button>
-                    ) : (
-                        <button
-                            onClick={handleSubmit}
-                            disabled={isSubmitting}
-                            className="flex items-center gap-2 px-8 py-3 bg-brand-primary text-white rounded-xl hover:bg-brand-primary/90 transition-all font-bold uppercase tracking-widest text-xs shadow-lg shadow-brand-primary/30 disabled:opacity-75 disabled:cursor-wait"
-                        >
-                            {isSubmitting ? 'Procesando...' : 'Ver Resultados'}
-                            {!isSubmitting && <CheckCircle2 size={16} />}
-                        </button>
+                .rfai-test-layout header {
+                  min-height:84px;
+                  display:flex;
+                  align-items:center;
+                  justify-content:space-between;
+                  gap:20px;
+                }
+
+                .rfai-test-layout .brand {
+                  display:flex;
+                  align-items:center;
+                  gap:14px;
+                  min-width:0;
+                }
+
+                .rfai-test-layout .brand img {
+                  width:54px;
+                  height:54px;
+                  object-fit:contain;
+                  flex-shrink:0;
+                }
+
+                .rfai-test-layout .brand-copy strong {
+                  display:block;
+                  color:var(--text);
+                  font-size:1rem;
+                  line-height:1.05;
+                }
+
+                .rfai-test-layout .brand-copy span {
+                  display:block;
+                  margin-top:3px;
+                  color:var(--text-soft);
+                  font-size:.84rem;
+                }
+
+                .rfai-test-layout nav {
+                  display:flex;
+                  align-items:center;
+                  gap:26px;
+                }
+
+                .rfai-test-layout nav a {
+                  color:var(--text-soft);
+                  font-size:.95rem;
+                  transition:.2s ease;
+                }
+
+                .rfai-test-layout nav a:hover {
+                  color:var(--primary-dark);
+                }
+
+                .rfai-test-layout .header-actions {
+                  display:flex;
+                  align-items:center;
+                  gap:12px;
+                }
+
+                .rfai-test-layout .btn {
+                  display:inline-flex;
+                  align-items:center;
+                  justify-content:center;
+                  min-height:50px;
+                  padding:0 22px;
+                  border-radius:999px;
+                  font-weight:600;
+                  font-size:.95rem;
+                  transition:.2s ease;
+                  border:1px solid transparent;
+                  cursor:pointer;
+                  white-space:nowrap;
+                }
+
+                .rfai-test-layout .btn-primary {
+                  background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+                  color:#fff;
+                  box-shadow:0 12px 26px rgba(15,151,185,.22);
+                }
+                .rfai-test-layout .btn-primary:hover { transform:translateY(-1px); }
+                .rfai-test-layout .btn-outline { background: #fff; border: 1px solid var(--line); color: var(--text); }
+                .rfai-test-layout .btn-outline:hover { background: var(--bg-soft); }
+
+                /* hero Step 0 */
+                .rfai-test-layout .hero-step0 {
+                  padding:80px 0 40px;
+                  text-align:center;
+                }
+                .rfai-test-layout .hero-step0 h1 {
+                  font-size:2.5rem;
+                  margin-bottom:14px;
+                  letter-spacing:-.05em;
+                }
+                .rfai-test-layout .hero-step0 p {
+                  color:var(--text-soft);
+                  max-width:600px;
+                  margin:auto;
+                }
+
+                .rfai-test-layout .card-step0 {
+                  background:white;
+                  padding:40px;
+                  border-radius:24px;
+                  box-shadow:var(--shadow);
+                  max-width:520px;
+                  margin:40px auto;
+                  border: 1px solid var(--line);
+                }
+
+                .rfai-test-layout .field {
+                  margin-bottom:20px;
+                  text-align:left;
+                }
+                .rfai-test-layout .field label {
+                  display:block;
+                  font-size:0.9rem;
+                  margin-bottom:6px;
+                  color:var(--text-soft);
+                }
+                .rfai-test-layout .field input {
+                  width:100%;
+                  padding:14px;
+                  border-radius:10px;
+                  border:1px solid var(--line);
+                  font-size:1rem;
+                  background: var(--bg-soft);
+                  font-family: inherit;
+                  color: var(--text);
+                }
+                .rfai-test-layout .field input:focus {
+                  outline: none;
+                  border-color: var(--primary);
+                  background: #fff;
+                }
+
+                /* hero Step 1+ */
+                .rfai-test-layout .hero-step1 {
+                  padding:30px 0 20px;
+                  background:
+                    radial-gradient(circle at top left, rgba(15,151,185,.08), transparent 24%),
+                    linear-gradient(180deg, #ffffff 0%, #f9fcfd 100%);
+                  border-bottom:1px solid var(--line);
+                }
+                .rfai-test-layout .hero-wrap {
+                  display:flex;
+                  justify-content:space-between;
+                  align-items:flex-end;
+                  gap:24px;
+                  flex-wrap:wrap;
+                }
+                .rfai-test-layout .eyebrow {
+                  display:inline-flex;
+                  align-items:center;
+                  gap:8px;
+                  padding:8px 14px;
+                  border-radius:999px;
+                  background:var(--primary-soft);
+                  color:var(--primary-dark);
+                  font-size:.88rem;
+                  font-weight:700;
+                  margin-bottom:14px;
+                }
+                .rfai-test-layout .hero-step1 h1 {
+                  font-size:clamp(2rem, 5vw, 3.3rem);
+                  line-height:.97;
+                  letter-spacing:-.05em;
+                  margin-bottom:10px;
+                }
+                .rfai-test-layout .hero-step1 p {
+                  color:var(--text-soft);
+                  font-size:1rem;
+                  max-width:58ch;
+                }
+                .rfai-test-layout .hero-side {
+                  display:flex;
+                  gap:12px;
+                  flex-wrap:wrap;
+                }
+                .rfai-test-layout .chip {
+                  background:#fff;
+                  border:1px solid var(--line);
+                  border-radius:999px;
+                  padding:12px 16px;
+                  color:var(--primary-dark);
+                  font-size:.92rem;
+                  font-weight:600;
+                  box-shadow:var(--shadow);
+                }
+
+                .rfai-test-layout .section {
+                  padding:28px 0 90px;
+                }
+
+                .rfai-test-layout .test-frame {
+                  background:#fff;
+                  border:1px solid var(--line);
+                  border-radius:32px;
+                  box-shadow:var(--shadow);
+                  overflow:hidden;
+                }
+
+                .rfai-test-layout .test-frame-top {
+                  padding:20px 24px;
+                  border-bottom:1px solid var(--line);
+                  background:linear-gradient(180deg, #ffffff 0%, #f9fcfd 100%);
+                  display:flex;
+                  justify-content:space-between;
+                  align-items:center;
+                  gap:18px;
+                  flex-wrap:wrap;
+                }
+
+                .rfai-test-layout .test-frame-top h2 {
+                  font-size:1.2rem;
+                  margin-bottom:4px;
+                }
+
+                .rfai-test-layout .test-frame-top p {
+                  color:var(--text-soft);
+                  font-size:.94rem;
+                }
+
+                .rfai-test-layout .test-progress {
+                  min-width:220px;
+                  flex:1;
+                  max-width:320px;
+                }
+
+                .rfai-test-layout .progress-label {
+                  display:flex;
+                  justify-content:space-between;
+                  font-size:.9rem;
+                  color:var(--text-soft);
+                  margin-bottom:8px;
+                }
+
+                .rfai-test-layout .progress-bar {
+                  width:100%;
+                  height:10px;
+                  border-radius:999px;
+                  background:#eaf3f5;
+                  overflow:hidden;
+                }
+
+                .rfai-test-layout .progress-fill {
+                  height:100%;
+                  background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+                  border-radius:999px;
+                  transition: width 0.3s ease;
+                }
+
+                .rfai-test-layout .test-content {
+                  padding:0;
+                }
+
+                .rfai-test-layout .test-mount {
+                  min-height:300px;
+                  background:#fff;
+                  padding: 24px;
+                }
+
+                .rfai-test-layout .frame-note {
+                  padding:16px 24px 24px;
+                  border-top:1px solid var(--line);
+                  color:var(--text-soft);
+                  font-size:.92rem;
+                  background:#fcfeff;
+                }
+
+                .rfai-test-layout footer {
+                  padding:28px 0 40px;
+                  border-top:1px solid rgba(34,52,58,.06);
+                  background:#fff;
+                }
+
+                .rfai-test-layout .footer-row {
+                  display:flex;
+                  justify-content:space-between;
+                  align-items:center;
+                  gap:18px;
+                  flex-wrap:wrap;
+                }
+
+                .rfai-test-layout .footer-links {
+                  display:flex;
+                  gap:16px;
+                  flex-wrap:wrap;
+                }
+
+                .rfai-test-layout .error-box {
+                  margin: 20px 0;
+                  padding: 14px;
+                  border-radius: 12px;
+                  background: #fee2e2;
+                  color: #991b1b;
+                  border: 1px solid #fecaca;
+                  text-align: center;
+                  font-size: 14px;
+                }
+
+                @media (max-width: 760px){
+                  .rfai-test-layout nav { display:none; }
+                  .rfai-test-layout .header-actions { flex-direction:column; align-items:stretch; }
+                  .rfai-test-layout .brand-copy span { display:none; }
+                  .rfai-test-layout .test-frame-top, .rfai-test-layout .frame-note { padding-left:20px; padding-right:20px; }
+                  .rfai-test-layout .test-mount { padding: 16px; }
+                  .rfai-test-layout .test-controls { flex-direction: column-reverse; gap: 12px; }
+                  .rfai-test-layout .test-controls button { width: 100%; }
+                }
+            `}} />
+
+            <div className="topbar">
+                <header className="container">
+                    <a href="#/" className="brand">
+                        <img src={logoImg} alt="Logo Centro Clínico Equilibrar" />
+                        <div className="brand-copy">
+                            <strong>Centro Clínico Equilibrar</strong>
+                            <span>Psicología clínica y modelo RFAI</span>
+                        </div>
+                    </a>
+
+                    <nav>
+                        <a href="#/">Inicio</a>
+                        <a href="#/rfai">Conocer RFAI</a>
+                    </nav>
+
+                    {step === 0 && (
+                        <div className="header-actions">
+                            <button className="btn btn-outline" onClick={() => { document.getElementById("form-inicio")?.scrollIntoView({ behavior: "smooth" }) }}>Comenzar ahora</button>
+                        </div>
                     )}
-                </div>
-
+                </header>
             </div>
+
+            <main>
+                {step === 0 ? (
+                    <section className="hero-step0">
+                        <div className="container">
+                            <h1>Comienza el Test RFAI</h1>
+                            <p>
+                                Antes de comenzar necesitamos registrar tu nombre y correo para poder enviarte
+                                el resultado de tu evaluación.
+                            </p>
+
+                            <div className="card-step0" id="form-inicio">
+                                <form onSubmit={(e) => { e.preventDefault(); nextStep(); }}>
+                                    <div className="field">
+                                        <label>Nombre completo</label>
+                                        <input type="text" name="name" value={userInfo.name} onChange={handleUserInfoChange} required placeholder="Ej. Juan Pérez" />
+                                    </div>
+
+                                    <div className="field">
+                                        <label>Correo electrónico</label>
+                                        <input type="email" name="email" value={userInfo.email} onChange={handleUserInfoChange} required placeholder="ejemplo@correo.com" />
+                                    </div>
+
+                                    {error && <div className="error-box">{error}</div>}
+
+                                    <button className="btn btn-primary" type="submit" style={{ width: "100%", marginTop: "10px" }}>
+                                        Comenzar test
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                ) : (
+                    <>
+                        <section className="hero-step1">
+                            <div className="container hero-wrap">
+                                <div>
+                                    <div className="eyebrow">Paso {step} de 4</div>
+                                    <h1>Ingresa a responder</h1>
+                                    <p>Esta página es la entrada directa al test. Aquí comienza tu evaluación.</p>
+                                </div>
+
+                                <div className="hero-side">
+                                    <div className="chip">Breve</div>
+                                    <div className="chip">Directo</div>
+                                    <div className="chip">Orientador</div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section className="section">
+                            <div className="container">
+                                <div className="test-frame">
+                                    <div className="test-frame-top">
+                                        <div>
+                                            <h2>Test RFAI</h2>
+                                            <p>Responde las preguntas y avanza hasta completar tu evaluación.</p>
+                                        </div>
+
+                                        <div className="test-progress">
+                                            <div className="progress-label">
+                                                <span>Progreso</span>
+                                                <span>{Math.round(progressPercent)}%</span>
+                                            </div>
+                                            <div className="progress-bar">
+                                                <div className="progress-fill" style={{ width: `${progressPercent}%` }}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="test-content">
+                                        <div className="test-mount" id="rfai-test-app">
+                                            {getStepContent()}
+
+                                            {error && <div className="error-box">{error}</div>}
+
+                                            {/* Controles de Navegación */}
+                                            <div className="test-controls mt-8 flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                                                <button
+                                                    onClick={prevStep}
+                                                    disabled={isSubmitting}
+                                                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs text-slate-600 hover:bg-slate-50 hover:text-brand-primary transition-all disabled:opacity-50"
+                                                >
+                                                    <ArrowLeft size={16} /> Atrás
+                                                </button>
+
+                                                {step < 4 ? (
+                                                    <button
+                                                        onClick={nextStep}
+                                                        className="flex items-center gap-2 px-8 py-3 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-all font-bold uppercase tracking-widest text-xs"
+                                                    >
+                                                        Continuar <ArrowRight size={16} />
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        onClick={handleSubmit}
+                                                        disabled={isSubmitting}
+                                                        className="btn btn-primary"
+                                                        style={{ height: "auto", padding: "12px 24px", minHeight: "46px" }}
+                                                    >
+                                                        {isSubmitting ? 'Procesando...' : 'Finalizar y ver resultado'}
+                                                        {!isSubmitting && <CheckCircle2 size={16} className="ml-2" />}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="frame-note">
+                                        Esta evaluación no reemplaza una valoración clínica completa. Funciona como una lectura inicial orientadora.
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </>
+                )}
+            </main>
+
+            <footer>
+                <div className="container footer-row">
+                    <p>© 2026 Centro Clínico Equilibrar</p>
+                    <div className="footer-links">
+                        <a href="#/">Inicio</a>
+                        <a href="#/rfai">Modelo RFAI</a>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 };

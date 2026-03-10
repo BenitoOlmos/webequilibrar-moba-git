@@ -11,6 +11,7 @@ import ReprogramacionMental from './pages/ReprogramacionMental';
 import TestRFAI from './pages/TestRFAI';
 import AudioReprogramacion from './pages/AudioReprogramacion';
 import AudioReactividad from './pages/AudioReactividad';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 
 // ScrollToTop component to handle scroll reset on route change
 const ScrollToTop = () => {
@@ -27,6 +28,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <ScrollToTop />
+      <FloatingWhatsApp />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/rfai" element={<LandingRFAI />} />
@@ -105,14 +107,7 @@ const App: React.FC = () => {
           }
         />
 
-        <Route
-          path="/test-rfai"
-          element={
-            <Layout>
-              <TestRFAI />
-            </Layout>
-          }
-        />
+        <Route path="/test-rfai" element={<TestRFAI />} />
         <Route
           path="/audio-reprogramacion"
           element={

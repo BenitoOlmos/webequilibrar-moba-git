@@ -10,6 +10,15 @@ import alanImg from '../assets/images/alan-lama.png';
 import rfai2Img from '../assets/images/RFAI-2.png';
 
 const Home: React.FC = () => {
+   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+      e.preventDefault();
+      const element = document.getElementById(id);
+      if (element) {
+         const topOffset = element.getBoundingClientRect().top + window.scrollY - 86; // accounting for 86px fixed topbar
+         window.scrollTo({ top: topOffset, behavior: 'smooth' });
+      }
+   };
+
    return (
       <div className="home-wrapper">
          <style dangerouslySetInnerHTML={{
@@ -754,11 +763,11 @@ const Home: React.FC = () => {
                </a>
 
                <nav className="home-nav">
-                  <a href="#test">Test</a>
-                  <a href="#rfai">RFAI</a>
-                  <a href="#podcast">Podcast</a>
-                  <a href="#equipo">Equipo</a>
-                  <a href="#contacto">Contacto</a>
+                  <a href="#test" onClick={(e) => handleScrollTo(e, 'test')}>Test</a>
+                  <a href="#rfai" onClick={(e) => handleScrollTo(e, 'rfai')}>RFAI</a>
+                  <a href="#podcast" onClick={(e) => handleScrollTo(e, 'podcast')}>Podcast</a>
+                  <a href="#equipo" onClick={(e) => handleScrollTo(e, 'equipo')}>Equipo</a>
+                  <a href="#contacto" onClick={(e) => handleScrollTo(e, 'contacto')}>Contacto</a>
                </nav>
 
                <div className="home-header-actions">
@@ -1122,11 +1131,11 @@ const Home: React.FC = () => {
             <div className="home-container home-footer-row">
                <p>© 2026 Centro Clínico Equilibrar</p>
                <div className="home-footer-links">
-                  <a href="#test">Test</a>
-                  <a href="#rfai">RFAI</a>
-                  <a href="#podcast">Podcast</a>
-                  <a href="#equipo">Equipo</a>
-                  <a href="#contacto">Contacto</a>
+                  <a href="#test" onClick={(e) => handleScrollTo(e, 'test')}>Test</a>
+                  <a href="#rfai" onClick={(e) => handleScrollTo(e, 'rfai')}>RFAI</a>
+                  <a href="#podcast" onClick={(e) => handleScrollTo(e, 'podcast')}>Podcast</a>
+                  <a href="#equipo" onClick={(e) => handleScrollTo(e, 'equipo')}>Equipo</a>
+                  <a href="#contacto" onClick={(e) => handleScrollTo(e, 'contacto')}>Contacto</a>
                </div>
             </div>
          </footer>
