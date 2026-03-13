@@ -9,6 +9,7 @@ import Hypnosis from './pages/Hypnosis';
 import HypnosisCulpa from './pages/HypnosisCulpa';
 import ReprogramacionMental from './pages/ReprogramacionMental';
 import TestRFAI from './pages/TestRFAI';
+import ResultRFAI from './pages/ResultRFAI';
 import AudioReprogramacion from './pages/AudioReprogramacion';
 import AudioReactividad from './pages/AudioReactividad';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
@@ -108,6 +109,7 @@ const App: React.FC = () => {
         />
 
         <Route path="/test-rfai" element={<TestRFAI />} />
+        <Route path="/resultado" element={<ResultRFAI />} />
         <Route
           path="/audio-reprogramacion"
           element={
