@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Activity, Brain, HeartPulse, UserCircle2, ArrowRight, ShieldCheck, ArrowLeft, CheckCircle2, BarChart3, PlayCircle } from 'lucide-react';
 import { profilesData } from '../data/testRFAIProfiles';
 import logoImg from '../assets/images/logo-clinica-equilibrar.png';
@@ -315,8 +316,8 @@ const TestRFAI: React.FC = () => {
                 },
                 body: formData.toString()
             });
-            setResults(calculatedResults);
-            setShowResults(true);
+            const encodedData = btoa(JSON.stringify(calculatedResults));
+            navigate(`/resultado?data=${encodedData}`);
             window.scrollTo(0, 0);
         } catch (err) {
             console.error("Error al enviar los datos:", err);
